@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+
+
+@media (max-width:992px) {
+
+    /* //////////// login section //////////// */
+
+    /* facebook heading display changing */
+    .col1-Login {
+        display: none !important;
+    }
+    .fb-heading {
+        display: block !important;
+        margin-bottom: 2rem !important;
+    }
+
+    /* login card width */
+    .login-card {
+        width: 100%;
+    }
+
+    /* create account button width */
+    .createAccounnt-btn {
+        width: 75% !important; 
+        font-size: 0.9rem !important;
+    }
+
+}
+
+
+@media (max-width:450px) {
+    .fb-heading {
+        font-size: 2.5rem !important;
+    }
+}
