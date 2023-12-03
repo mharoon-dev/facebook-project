@@ -15,6 +15,9 @@
 </head>
 <body class="d-flex justify-content-center align-items-center " style="height: 100vh;">
 
+
+    <!-- login form -->
+
     <div class="container p-0">
         <div class="row d-flex justify-content-center align-items-start">
             
@@ -39,7 +42,7 @@
             </div> 
     
              <!-- login form  -->
-             <div class="col-lg-5 col-md-8 col-sm-10 col-12 d-flex justify-content-center">
+             <div class="col-lg-5 col-md-8 col-sm-10 col-12 d-flex justify-content-center align-items-center ">
                     <div class=" card login-card" 
                     style="width: 85%;
                     height: 100%; 
@@ -47,7 +50,7 @@
                     box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);">
                         <div class="card-body">
     
-                        <input 
+                        <input id="loginEmail"
                           class="w-100 mb-3" 
                           style="height: 3rem; 
                           border: 1px solid lightgrey; 
@@ -55,7 +58,7 @@
                           placeholder="&nbsp;&nbsp;Email address"
                           type="text">
     
-                        <input 
+                        <input id="loginPassword"
                           class="w-100 mb-3" 
                           style="height: 3rem; 
                           border: 1px solid lightgrey; 
@@ -64,7 +67,7 @@
                           type="password">
                           
                         <a 
-                          href="#" 
+                          href="#" id="loginBtn"
                           style="font-weight: bold !important;
                           font-size: 1.4rem;
                           padding-top:0.5rem;
@@ -92,18 +95,20 @@
         </div>
     </div>
 
+    </div>
+
 
     <!-- signup form -->
 
     <div 
     class="p-3 pt-2 m-2 signup-modal" 
-    style="display: none ; color: white; border-radius: 8px;
+    style="display: none ; background-color: white; position: absolute; z-index: 1; color: white; border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);"
     >
 
         <div class="d-flex justify-content-between align-items-center">
             <h2 style="color: black;">Sign Up</h2>
-            <img src="./assets/cross.png" width="15rem">
+            <img id="crossBtn" src="./assets/cross.png" width="15rem">
         </div>
 
         <p style="color: grey;">It's quick and easy.</p>
@@ -111,14 +116,14 @@
 
         <div class="w-100 p-1 d-flex justify-content-between align-items-center">
 
-            <input 
+            <input id="FirstName"
             style="width: 48%; height: 2.5rem; 
             border: 1px solid grey; border-radius: 5px; 
             background-color: #f5f6f7;" 
             type="text" 
             placeholder="&nbsp;First name">
 
-            <input 
+            <input id="lastName"
             style="width: 48%; height: 2.5rem; 
             border: 1px solid grey; border-radius: 5px; 
             background-color: #f5f6f7;" 
@@ -126,14 +131,14 @@
 
         </div>
 
-            <input class="mt-2 mb-2"
+            <input class="mt-2 mb-2" id="email"
             style="width: 100%; height: 2.5rem;
             border: 1px solid grey;
             border-radius: 5px; 
             background-color: #f5f6f7;" 
             type="email" placeholder="&nbsp;Email ">
 
-            <input 
+            <input id="password"
             style="width: 100%; height: 2.5rem;
             border: 1px solid grey;
             border-radius: 5px; 
@@ -141,7 +146,7 @@
             type="password" placeholder="&nbsp;password ">
 
             <a 
-                href="#" 
+                href="#" id="signupBtn" 
                 class="btn w-50 p-2 mt-3 mx-auto d-flex justify-content-center align-items-center" 
                 style="background-color:#42b72a !important;
                 color: white;
