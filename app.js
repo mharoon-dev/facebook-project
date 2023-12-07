@@ -88,7 +88,7 @@ loginBtn.addEventListener('click', () => {
 
             // diverting to home page
             setTimeout(() => {
-                window.location.replace = "../home/index.html" 
+                window.location.href = "../home/index.html" 
             }, 1000);
 
         } else {

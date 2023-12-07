@@ -3,14 +3,21 @@
     padding: 0;
     margin: 0;
     list-style: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+    background-color: #F0F2F5;
 }
 
 /* navbar */
 .navbar {
-    box-shadow: 0px 3px 11px -2px rgba(0,0,0,0.75);
--webkit-box-shadow: 0px 3px 11px -2px rgba(0,0,0,0.75);
--moz-box-shadow: 0px 3px 11px -2px rgba(0,0,0,0.75);
+    box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.75);
 padding: 12px !important;
+position: fixed !important;
+z-index: 10 !important;
+background-color: white !important;
 }
 #searchInput {
     height:2.7rem;
@@ -24,6 +31,8 @@ padding: 12px !important;
 
 /* sidebar */
 .siderBar {
+    position: absolute !important;
+    z-index: 1000 !important;
     height: 100vh !important;
     background-color: white !important;
     box-shadow: 4px 0px 11px 0px rgba(0,0,0,0.75) !important;
@@ -33,29 +42,91 @@ padding: 12px !important;
 /* sidebar end */
 
 
+/* leftSide menuBar */
+.home-content {
+    position: absolute !important;
+    margin-top: 4.7rem !important;
+    z-index: -1 !important;
+}
+.leftSideBarRow {
+    text-transform: capitalize;
+    font-size: large;
+    font-weight: 700;
+    height: 100vh !important;
+    overflow-y: hidden !important ;
+    /* position: static; */
+}
+.leftSideBarRow:hover {
+    overflow-y: scroll !important ;
+}
+.leftBarBtn:hover,.rightBarBtn:hover {
+    background-color: #E4E6EB;
+    border: none;
+    border-radius: 10px;
+}
+/* leftSide menuBar end */
+
+
+
+
+
+
+
+
+/* |||||||||||||||||||||  media quiruies  ||||||||||||||||||||| */
 
 @media (max-width:992px) {
-
-    /* #searchInput {
-        width: 12rem !important;
-    } */
-
+    /* toggle btn display setting */
     #toggleBtn {
         display: block !important;
     }
-
+    /* navbar btn display setting */
     .centerBtns,#menuBtn,
     #messengerBtn,
     #notificationBtn {
         display: none !important;
     }
+}
+
+@media (min-width:992px) {
+    /* left bar display setting */
+    #leftbar {
+        display: block !important;
+    }
+}
+
+@media (max-width:400px) {
+    /* search input width setting */
+    #searchInput {
+        width: 8rem !important;
+    }
     
 }
 
+@media (max-width:1200px) {
+    /* lleft bar margin setting */
+    .leftBar {
+        margin-top: 5.5% !important;
 
-@media (max-width:400px) {
-    #searchInput {
-        width: 8rem !important;
+    }
+}
+
+@media (max-width:767px) {
+    .rightbar {
+        display: none !important;
+    }
+}
+
+@media (max-width:440px) {
+    #centerBarP {
+        font-size: small;
+    }
+    .createPostH6 img {
+        width: 1.1rem !important;
+    }
+    .createPostH6 {
+        font-size: 9px !important;
+
     }
     
 }
