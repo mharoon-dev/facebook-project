@@ -14,11 +14,11 @@ crossBtn.addEventListener('click' , () => {
     sideBar.style.transition = "0.5s"
 })
 
-// right side menu
+// left side menu
 let menuBarName = [
     {
         image:'../assets/home/home content/user account button image.png',
-        name:'Muhammad Haroon'
+        name: JSON.parse(localStorage.getItem("loggedInuser")).FirstName
     },
     {
         image:'../assets/home/home content/1 person image.png',
@@ -62,10 +62,12 @@ let leftSideBarRow = document.querySelector('.leftSideBarRow')
 menuBarName.forEach((menuCard) => {
     leftSideBarRow.innerHTML += `
             <div class="col-12 p-4 ps-3 leftBarBtn">
-                <img src="${menuCard['image']}" width="35rem">
+                <img style="border-radius:50%;" src="${menuCard['image']}" width="35rem">
                 <span id="${menuCard['name']}">${menuCard['name']}</span>
             </div>`
 });
+
+
 
 // right side menu
 let rightSideBar = [
@@ -118,3 +120,54 @@ rightSideBar.forEach((friend) => {
             </div>`
 });
 
+
+// posts 
+
+
+let centerAreaPosts = document.querySelector('.centerArea')
+let fileInput = document.querySelector('#fileInput')
+let discriptionInput = document.querySelector('#discriptionInput')
+let postBtn = document.querySelector('#postBtn')
+
+
+postBtn.addEventListener('click' , () => {
+    centerAreaPosts.innerHTML += `
+    <div class="col-12 mt-4" >
+
+                            <div class=" bg-white  pt-3"
+                            style="border-radius: 15px;
+                            box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+                            -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+                            -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
+
+                            <div class="d-flex justify-content-start align-items-center p-1">
+                                <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
+                                <h6 id="userNameInPost" style="text-transform: capitalize;"></h6>
+                            </div>
+
+                            <!-- discription area -->
+                            <div class="d-flex justify-content-around align-items-center mt-3 ps-2 p-1 pb-0">
+                                <p class="mb-2" id="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea corporis facere tempore unde, mollitia quibusdam?</p>
+                            </div>
+
+                            <!-- image area -->
+                            <div class="d-flex justify-content-around align-items-center  p-0 m-0 w-100 ">
+                                <img src="../3.jpeg" class="w-100 h-50"  style="overflow: hidden !important;">
+                            </div>
+
+                            <!-- like and comment area -->
+                            <div class="d-flex justify-content-around align-items-center p-0 m-0">
+                                <button class="w-50 p-2" style="border: 1px solid lightgrey; background-color: whitesmoke;">Like</button>
+                                <button class="w-50 p-2" style="border: 1px solid lightgrey; background-color: whitesmoke;">Comment</button>
+                            </div>
+
+                            </div>
+                        </div>`
+})
+
+
+// let userNameInPost = document.querySelector('#userNameInPost')
+// let FirstNameOfuser = JSON.parse(localStorage.getItem("loggedInuser")).FirstName
+// let lastNameOfuser = JSON.parse(localStorage.getItem("loggedInuser")).lastName
+// let fullName = `${FirstNameOfuser} ${lastNameOfuser}`
+// userNameInPost.textContent = fullName
