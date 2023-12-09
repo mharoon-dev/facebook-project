@@ -1,3 +1,9 @@
+let loggedInUser = JSON.parse(localStorage.getItem('loggedInuser')) || console.log('no user is logged in..');
+console.log(loggedInUser);
+if (loggedInUser == true) window.location.herf = './home/index.html'
+
+
+
 // signup modal display
 
 let signupForm = document.querySelector('.signup-modal')
@@ -42,6 +48,7 @@ signupBtn.addEventListener('click' , () => {
             let user = {
                 FirstName: FirstName.value,
                 lastName: lastName.value,
+                fullName: FirstName.value + " " + lastName.value,
                 email: email.value,
                 password: password.value,
         };
