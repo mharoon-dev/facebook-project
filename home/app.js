@@ -141,49 +141,44 @@ console.log(postsData);
 
 
 // post function
-postBtn.addEventListener('click' , () => {
+postBtn.addEventListener('click', () => {
+    let selectedFile = fileInput.files[0];
+    let discriptionValue = discriptionInput.value;
 
-    if (fileInput.files.length > 0 || discriptionInput.value) {
-        let selectedFile = fileInput.files[0];
+    if (selectedFile || discriptionValue) {
+        let reader = new FileReader();
 
-        if (selectedFile) {
-            let reader = new FileReader();
-
-            reader.onload = function (event) {
-                let fileUrl = event.target.result;
-                
-            // console.log(fileUrl);
+        reader.onload = function (event) {
+            let fileUrl = event.target.result || false;
 
             // data of post
             postObj = {
                 id: Date.now(),
-                discription:discriptionInput.value,
-                file:fileUrl,
+                discription: discriptionValue,
+                file: fileUrl || '',
                 userDetails: JSON.parse(localStorage.getItem('loggedInuser'))
-            }
-            console.log(postObj);
+            };
 
-            // emptying the feilds of post modal
+            // emptying the fields of post modal
             discriptionInput.value = '';
             fileInput.value = '';
-            
-            
-            
-            // adding data in localStorage 
-            postsData.push(postObj)
 
+            // adding data in localStorage
+            postsData.push(postObj);
+            localStorage.setItem("postsData", JSON.stringify(postsData));
 
-            localStorage.setItem("postsData" , JSON.stringify(postsData))
-            }
-            
+            // Displaying posts after adding a new post
+            // displayPosts();
+        };
+
+        if (selectedFile) {
             reader.readAsDataURL(selectedFile);
-
-
-            
+        } else {
+            // If no file is selected, invoke onload with null result
+            reader.onload({ target: { result: null } });
         }
-
     }
-})
+});
 
 
 
@@ -202,26 +197,40 @@ let displayingPost = posts.forEach((post) => {
 
         // post HTML
         centerAreaPosts.innerHTML += `
-        <div class="col-12 mt-4">
-        <div class="bg-white pt-3"
+        <div class="col-12 mt-4" >
+        <div class="bg-white pt-3" id="${Date.now()}"
         style="border-radius: 15px; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
         -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
         -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
         
-        <div class="d-flex justify-content-start align-items-center p-1">
+        <div class="d-flex justify-content-between align-items-center p-1 ">
+        
+        <div class="d-flex justify-content-center align-items-center">
         <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
-        <h6 id="userNameInPost" style="text-transform: capitalize;">${post.userDetails.fullName}</h6>
+        <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${post.userDetails.fullName}</h6>
+        </div>
+
+        <div class="d-flex justify-content-center align-items-center dropdown">
+        ${JSON.parse(localStorage.getItem("loggedInuser")).fullName === post.userDetails.fullName ? `<img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
+        <ul class="dropdown-menu">
+      <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
+      <li><a class="dropdown-item" class="${post.id}" onclick="deleteHandler(${post.id})">Delete</a></li>
+      <li><a class="dropdown-item" href="#">Profile</a></li>
+    </ul>` :``}
+        
+        </div>
         </div>
         
         <!-- discription area -->
             <div class="d-flex justify-content-start align-items-center mt-1 ps-2 p-1 pb-0">
                 <p class="mb-2" id="description">${post.discription}</p>
                 </div>
-                                
+
                 <!-- image area -->
                 <div class=" p-0 m-0 w-100 ">
-                <img class="w-100" src="${post.file}" alt="Uploaded Image">
+                <img class="w-100" src="${post.file}">
                 </div>
+                                
                 
                 <!-- like and comment area -->
                 <div class="d-flex justify-content-around align-items-center p-0 m-0">
@@ -233,6 +242,13 @@ let displayingPost = posts.forEach((post) => {
                 </div>`;
                                 
 })
+
+
+
+// edit post
+
+let editPostText = document.querySelector('#editPostText')
+// editPostText.innerHTML = 
                             
                             
 
