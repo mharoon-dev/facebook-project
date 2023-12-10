@@ -250,5 +250,5 @@ let displayingPost = posts.forEach((post) => {
 let editPostText = document.querySelector('#editPostText')
 // editPostText.innerHTML = 
                             
-                            
+         // email id changing                   
 
