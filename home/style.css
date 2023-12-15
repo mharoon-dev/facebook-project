@@ -76,11 +76,10 @@ background-color: white !important;
 }
 /* modal for posts end */
 
-
-
-
-
-
+/* changing the cursor on the dropdown */
+.dropdown-menu {
+    cursor: pointer;
+}
 
 
 /* |||||||||||||||||||||  media quiruies  ||||||||||||||||||||| */

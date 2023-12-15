@@ -162,7 +162,7 @@ let displayingPost = () => {
         <div class="d-flex justify-content-center align-items-center dropdown">
         ${JSON.parse(localStorage.getItem("loggedInuser")).fullName === post?.user?.fullName ? `<img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
         <ul class="dropdown-menu">
-        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
+        <li><a class="dropdown-item" onclick="editPostHandler(${post?.id})" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
         <li><a class="dropdown-item" onclick="deleteHandler(${post?.id})">Delete</a></li>
         <li><a class="dropdown-item" href="#">Profile</a></li>
         </ul>` :``}
@@ -207,7 +207,7 @@ let displayingPost = () => {
         <div class="d-flex justify-content-center align-items-center dropdown">
         ${JSON.parse(localStorage.getItem("loggedInuser")).fullName === post?.user?.fullName ? `<img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
         <ul class="dropdown-menu">
-        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
+        <li><a class="dropdown-item" onclick="editPostHandler(${post?.id})" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
         <li><a class="dropdown-item" onclick="deleteHandler(${post?.id})">Delete</a></li>
         <li><a class="dropdown-item" href="#">Profile</a></li>
         </ul>` :``}
@@ -267,14 +267,12 @@ postBtn.addEventListener('click', () => {
     // giving posts array to localStorage
     localStorage.setItem("posts" , JSON.stringify(posts))
 
-    alert("Reload the page")
-
-    setTimeout(() => {
-        displayingPost()
-    }, 1000);
-
+    // emptying the felids 
     fileInput.value = ''
     discriptionInput.value = ''
+
+    // reloading the page
+    location.reload()
 
 
 //     // getting data from localStorage
@@ -324,25 +322,77 @@ postBtn.addEventListener('click', () => {
 // // delete post
 
 function deleteHandler(postId) {
-    console.log(postId);
+    // console.log(postId);
 
     // getting data form localStorage
     let postsFromLocalStorage = JSON.parse(localStorage.getItem('posts'))
-    console.log(postsFromLocalStorage);
+    // console.log(postsFromLocalStorage);
 
     let filtration = postsFromLocalStorage.filter( (post) => post.id !== postId)
-    console.log(filtration);
+    // console.log(filtration);
 
     // giving data to localStorage
     localStorage.setItem('posts' , JSON.stringify(filtration))
 
-    alert("Reload your page after 5 seconds")
-
-    setTimeout(() => {
-        displayingPost()
-    }, 4000);
+    // reloading the page
+    location.reload()
 
 }
 
-                
+   
+////////////////////////////////////////
+
+// edit function
+let editTextArea = document.querySelector('.editTextArea')
+let oldPost;
+let oldPostIndex;
+
+function editPostHandler(postId) {
+    // console.log(postId);
+
+    // geting data from localStorage
+    let postsData = JSON.parse(localStorage.getItem("posts"))
+    // console.log(postsData);
+
+    // FINDING THE POST
+    let findPost = postsData.find( post => post.id == postId )
+    let findPostIndex = postsData.findIndex( post => post.id == postId )
+    // console.log(findPostIndex);
+
+    // content of post giving to input
+    editTextArea.innerHTML = findPost['discription']
+
+    // saving data in old post
+    oldPost = findPost
+    oldPostIndex = findPostIndex
+
+}
+
+
+///////////////////////////////////////////
+
+let updateBtn = document.querySelector('#updateBtn')
+
+function updateHandler() {
+
+    // making an obbject for updated post
+    let postObj = {
+        id: oldPost['id'],
+        discription: editTextArea.value ||  oldPost['discription'],
+        file: oldPost['file'],
+        user: oldPost['user'],
+    } 
+    // console.log(postObj);
+
+    // data from localStorage
+    let postData = JSON.parse(localStorage.getItem('posts'))
+    postData.splice(oldPostIndex , 1 , postObj)
+    
+    // giving data to localStorage
+    let posts = (localStorage.setItem('posts' , JSON.stringify(postData)))
+
+    // reloading the page
+    location.reload()
+}
+
 

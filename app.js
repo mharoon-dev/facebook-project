@@ -1,7 +1,10 @@
-let loggedInUser = JSON.parse(localStorage.getItem('loggedInuser')) || console.log('no user is logged in..');
+let loggedInUser = JSON.parse(localStorage.getItem('loggedInuser'))
 console.log(loggedInUser);
-if (loggedInUser == true) window.location.herf = './home/index.html'
-
+if (loggedInUser) {
+    window.location.herf = './home/index.html'
+} else {
+    console.log("sorry");
+}
 
 
 // signup modal display
