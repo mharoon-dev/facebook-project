@@ -179,6 +179,10 @@ let displayingPost = () => {
         <div class=" p-0 m-0 w-100 ">
         <img class="w-100" src="${post?.file}">
         </div>
+
+        <div class="w-100">
+        
+        </div>
         
         
         <!-- like and comment area -->
@@ -201,7 +205,9 @@ let displayingPost = () => {
         
         <div class="d-flex justify-content-center align-items-center">
         <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
+        <div>
         <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${post.user.fullName}</h6>
+        </div>
         </div>
         
         <div class="d-flex justify-content-center align-items-center dropdown">
@@ -396,3 +402,13 @@ function updateHandler() {
 }
 
 
+//////////////////////////////////////////
+
+let logoutBtn = document.querySelector('#logoutBtn')
+
+logoutBtn.addEventListener('click' , () => {
+
+    localStorage.removeItem('loggedInuser')
+
+    window.location.href = '../index.html'
+})

@@ -1,7 +1,7 @@
 let loggedInUser = JSON.parse(localStorage.getItem('loggedInuser'))
 console.log(loggedInUser);
 if (loggedInUser) {
-    window.location.herf = './home/index.html'
+        window.location.href = './home/index.html';
 } else {
     console.log("sorry");
 }
