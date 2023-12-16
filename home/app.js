@@ -134,6 +134,13 @@ let discriptionInput = document.querySelector('.discriptionInput')
 
 ///////////////////////////////////////////
 
+let likeNumber = 0
+let likeCounterHandler = (post) =>  ++likeNumber
+
+
+/////////////////////////////////////////////////
+
+
 // displaying post 
 
 let centerAreaPosts = document.querySelector('.centerArea')
@@ -176,19 +183,26 @@ let displayingPost = () => {
         </div>
         
         <!-- image area -->
-        <div class=" p-0 m-0 w-100 ">
+        <div class=" p-0 m-0 w-100 mb-2">
         <img class="w-100" src="${post?.file}">
         </div>
 
-        <div class="w-100">
-        
+        <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
+        <img src="../assets/home/home center content/like btn.png" width="20rem">
+        <h6 class="p-0  my-1 ms-1">4</h6>
         </div>
-        
+        <div class="d-flex justify-content-start align-items-center  mx-2">
+        <hr class="w-100 mt-1 mb-2">
+        </div>
         
         <!-- like and comment area -->
         <div class="d-flex justify-content-around align-items-center p-0 m-0">
-        <button class="w-50 p-2" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;">Like</button>
-        <button class="w-50 p-2" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 10px 0px;">Comment</button>
+        
+        <button onclick="${likeCounterHandler(post)}" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like btn.png" class="me-1" width="20rem"> Like</button>
+
+        <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 10px 0px;">
+        <img src="../assets/home/home center content/comment btn.png" class="me" width="35rem"> Comment</button>
+
         </div>
         
         </div>
@@ -212,11 +226,13 @@ let displayingPost = () => {
         
         <div class="d-flex justify-content-center align-items-center dropdown">
         ${JSON.parse(localStorage.getItem("loggedInuser")).fullName === post?.user?.fullName ? `<img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
+        
         <ul class="dropdown-menu">
         <li><a class="dropdown-item" onclick="editPostHandler(${post?.id})" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
         <li><a class="dropdown-item" onclick="deleteHandler(${post?.id})">Delete</a></li>
         <li><a class="dropdown-item" href="#">Profile</a></li>
         </ul>` :``}
+
         
         </div>
         </div>
@@ -225,11 +241,23 @@ let displayingPost = () => {
         <div class="d-flex justify-content-start align-items-center mt-1 ps-2 p-1 pb-0">
         <p class="mb-2" id="description">${post?.discription}</p>
         </div>
+
+        <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
+        <img src="../assets/home/home center content/like btn.png" width="20rem">
+        <h6 class="p-0  my-1 ms-1">3</h6>
+        </div>
+        <div class="d-flex justify-content-start align-items-center  mx-2">
+        <hr class="w-100 mt-1 mb-2">
+        </div>
         
         <!-- like and comment area -->
         <div class="d-flex justify-content-around align-items-center p-0 m-0">
-        <button class="w-50 p-2" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;">Like</button>
-        <button class="w-50 p-2" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 10px 0px;">Comment</button>
+        
+        <button onclick="${likeCounterHandler()}" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like btn.png" class="me-1" width="20rem"> Like</button>
+
+        <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 10px 0px;">
+        <img src="../assets/home/home center content/comment btn.png" class="me" width="35rem"> Comment</button>
+
         </div>
         
         </div>
@@ -240,6 +268,8 @@ let displayingPost = () => {
     
 } 
 displayingPost()
+
+
 
 ////////////////////////////////////////////////
 
