@@ -42,44 +42,22 @@ background-color: white !important;
 /* sidebar end */
 
 
-/* leftSide menuBar */
-.home-content {
-    position: absolute !important;
-    margin-top: 4.7rem !important;
-    z-index: -1 !important;
+/* profile content */
+.image-div {
+    /* border: 1px solid green !important; */
+    background-color: #F0F2F5 ;
+    box-shadow: 0px -11px 33px -15px rgba(0,0,0,0.75) inset;
+    -webkit-box-shadow: 0px -11px 33px -15px rgba(0,0,0,0.75) inset;
+    -moz-box-shadow: 0px -0px 33px -15px rgba(0,0,0,0.75) inset;
+    border-radius: 2px;
 }
-.leftSideBarRow {
-    text-transform: capitalize;
-    font-size: large;
-    font-weight: 700;
-    height: 100vh !important;
-    overflow-y: hidden !important ;
-    /* position: static; */
-}
-.leftSideBarRow:hover {
-    overflow-y: scroll !important ;
-}
-.leftBarBtn:hover,.rightBarBtn:hover {
-    background-color: #E4E6EB;
-    border: none;
-    border-radius: 10px;
-}
-/* leftSide menuBar end */
+/* profile content end */
 
 
-/* modal for posts */
-.fileInput {
-    background-color: lightgrey;
-    padding: 5px;
-    border: none;
-    border-radius: 10px;
-}
-/* modal for posts end */
 
-/* changing the cursor on the dropdown */
-.dropdown-menu {
-    cursor: pointer;
-}
+
+
+
 
 
 /* |||||||||||||||||||||  media quiruies  ||||||||||||||||||||| */
@@ -97,47 +75,13 @@ background-color: white !important;
     }
 }
 
-@media (min-width:992px) {
-    /* left bar display setting */
-    #leftbar {
-        display: block !important;
-    }
-}
-
 @media (max-width:400px) {
     /* search input width setting */
     #searchInput {
         width: 8rem !important;
     }
-    
-}
-
-@media (max-width:1200px) {
-    /* lleft bar margin setting */
-    .leftBar {
-        margin-top: 5.5% !important;
-    }
-
-    .createPostH6 {
-        font-size: 14px !important;
-    }
-}
-
-@media (max-width:767px) {
-    .rightbar {
-        display: none !important;
-    }
-}
-
-@media (max-width:440px) {
-    #centerBarP {
-        font-size: small;
-    }
-    .createPostH6 img {
-        width: 1.1rem !important;
-    }
-    .createPostH6 {
-        font-size: 10px !important;
+    #userProfileImage {
+        margin-left:27%  !important;
     }
     
 }
