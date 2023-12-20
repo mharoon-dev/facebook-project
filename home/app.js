@@ -134,12 +134,6 @@ let discriptionInput = document.querySelector('.discriptionInput')
 
 ///////////////////////////////////////////
 
-let likeNumber = 0
-let likeCounterHandler = (post) =>  ++likeNumber
-
-
-/////////////////////////////////////////////////
-
 
 // displaying post 
 
@@ -198,7 +192,7 @@ let displayingPost = () => {
         <!-- like and comment area -->
         <div class="d-flex justify-content-around align-items-center p-0 m-0">
         
-        <button onclick="${likeCounterHandler(post)}" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like btn.png" class="me-1" width="20rem"> Like</button>
+        <button  class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like btn.png" class="me-1" width="20rem"> Like</button>
 
         <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 10px 0px;">
         <img src="../assets/home/home center content/comment btn.png" class="me" width="35rem"> Comment</button>
@@ -253,7 +247,7 @@ let displayingPost = () => {
         <!-- like and comment area -->
         <div class="d-flex justify-content-around align-items-center p-0 m-0">
         
-        <button onclick="${likeCounterHandler()}" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like btn.png" class="me-1" width="20rem"> Like</button>
+        <button onclick="" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like btn.png" class="me-1" width="20rem"> Like</button>
 
         <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 10px 0px;">
         <img src="../assets/home/home center content/comment btn.png" class="me" width="35rem"> Comment</button>

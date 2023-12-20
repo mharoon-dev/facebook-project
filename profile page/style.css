@@ -51,6 +51,31 @@ body {
 }
 /* profile content end */
 
+
+/* leftSide menuBar */
+.home-content {
+  position: absolute !important;
+  margin-top: 4.7rem !important;
+  z-index: -1 !important;
+}
+.leftSideBarRow {
+  text-transform: capitalize;
+  font-size: large;
+  font-weight: 700;
+  height: 100vh !important;
+  overflow-y: hidden !important ;
+  /* position: static; */
+}
+.leftSideBarRow:hover {
+  overflow-y: scroll !important ;
+}
+.leftBarBtn:hover,.rightBarBtn:hover {
+  background-color: #E4E6EB;
+  border: none;
+  border-radius: 10px;
+}
+/* leftSide menuBar end */
+
 /* |||||||||||||||||||||  media quiruies  ||||||||||||||||||||| */
 
 @media (max-width: 992px) {
@@ -67,7 +92,7 @@ body {
   }
 }
 
-@media (max-width:767px) {
+@media (max-width:768px) {
     #userProfileImage {
         margin:  0 auto  !important;
         margin-top: -70px !important;
@@ -75,21 +100,27 @@ body {
     .userInfoDiv {
       margin-left: 0 !important;
     }
-    
 }
 
-@media (max-width: 376px) , (max-width: 400px) {
+@media (max-width: 400px) {
   /* search input width setting */
   #searchInput {
     width: 8rem !important;
   }
-  #userProfileImage {
-    margin-left: 32% !important;
-  }
+
 }
 
-@media (max-width: 375px) {
-  #userProfileImage {
-    margin-left: 27% !important;
+@media (max-width:440px) {
+  #centerBarP {
+      font-size: small;
   }
+  .createPostH6 img {
+      width: 1.1rem !important;
+  }
+  .createPostH6 {
+      font-size: 10px !important;
+  }
+  
 }
+
+
