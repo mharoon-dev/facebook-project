@@ -17,6 +17,10 @@ crossBtn.addEventListener('click' , () => {
 
 ////////////////////////////////////////////
 
+let userNameInProfile = document.querySelector('.userNameInProfile')
+userNameInProfile.textContent = JSON.parse(localStorage.getItem('loggedInuser'))['fullName']
+////////////////////////////////////////////
+
 // right side menu
 let rightSideBar = [
     {
@@ -355,3 +359,42 @@ function editPostHandler(postId) {
     oldPostIndex = findPostIndex
 
 }
+
+
+///////////////////////////////////////////
+
+let updateBtn = document.querySelector('#updateBtn')
+
+function updateHandler() {
+
+    // making an obbject for updated post
+    let postObj = {
+        id: oldPost['id'],
+        discription: editTextArea.value ||  oldPost['discription'],
+        file: oldPost['file'],
+        user: oldPost['user'],
+    } 
+    // console.log(postObj);
+
+    // data from localStorage
+    let postData = JSON.parse(localStorage.getItem('posts'))
+    postData.splice(oldPostIndex , 1 , postObj)
+    
+    // giving data to localStorage
+    let posts = (localStorage.setItem('posts' , JSON.stringify(postData)))
+
+    // reloading the page
+    location.reload()
+}
+
+
+//////////////////////////////////////////
+
+let logoutBtn = document.querySelector('#logoutBtn')
+
+logoutBtn.addEventListener('click' , () => {
+
+    localStorage.removeItem('loggedInuser')
+
+    window.location.href = '../index.html'
+})
