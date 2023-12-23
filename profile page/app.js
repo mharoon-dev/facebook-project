@@ -73,8 +73,6 @@ rightSideBar.forEach((friend) => {
 });
 
 
-////////////////////////////////////////////////////////////////
-
 // posts 
 
 let modal = document.querySelector('.modal')
@@ -82,12 +80,34 @@ let postBtn = document.querySelector('#postBtn')
 let fileInput = document.querySelector('.fileInput')
 let discriptionInput = document.querySelector('.discriptionInput')
 
-///////////////////////////////////////////
+////////////////////////////////////////////////
 
+let likeHandler = (postId) => {
+    // console.log(postId);
+    let posts = JSON.parse(localStorage.getItem('posts'))
 
+    let postLiked = posts.find( (post) => {
+        if (post['id'] == postId) return post
+    })
+    // console.log(postLiked);
 
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInuser'))
+    // console.log(loggedInUser);
 
-/////////////////////////////////////////////////
+     const alreadyLiked = postLiked['likes'].find( (likeByUserEmail) => {
+         if (likeByUserEmail == loggedInUser['email']) return likeByUserEmail
+    })
+
+    if (alreadyLiked) {
+        const indexOfUser = postLiked.likes.indexOf(alreadyLiked);
+        postLiked.likes.splice(indexOfUser, 1);
+      } else {
+        postLiked.likes.push(loggedInUser['email']);
+      }
+
+      localStorage.setItem("posts", JSON.stringify(posts))
+      location.reload()
+}
 
 
 // displaying post 
@@ -96,16 +116,9 @@ let centerAreaPosts = document.querySelector('.centerArea')
 
 let displayingPost = () => {
     let posts = JSON.parse(localStorage.getItem("posts")) || []
-    let loggedInUser = JSON.parse(localStorage.getItem("loggedInuser"))
-    console.log(posts);
+    // console.log(posts);
 
-    let filtration = posts.filter( (post) => {
-        return post.user.email == loggedInUser.email 
-    })
-    console.log(filtration);
-
-
-    filtration.reverse().forEach((post) => {
+    posts.reverse().forEach((post) => {
         // post HTML
        if (post.file) {
         centerAreaPosts.innerHTML += `
@@ -145,7 +158,7 @@ let displayingPost = () => {
 
         <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
         <img src="../assets/home/home center content/like btn.png" width="20rem">
-        <h6 class="p-0  my-1 ms-1">4</h6>
+        <h6 class="p-0  my-1 ms-1">${post.likes.length}</h6>
         </div>
         <div class="d-flex justify-content-start align-items-center  mx-2">
         <hr class="w-100 mt-1 mb-2">
@@ -154,10 +167,10 @@ let displayingPost = () => {
         <!-- like and comment area -->
         <div class="d-flex justify-content-around align-items-center p-0 m-0">
         
-        <button onclick="" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like btn.png" class="me-1" width="20rem"> Like</button>
+        <button onclick="likeHandler(${post['id']})"  class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like</button>
 
-        <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 10px 0px;">
-        <img src="../assets/home/home center content/comment btn.png" class="me" width="35rem"> Comment</button>
+        <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px;">
+        <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
 
         </div>
         
@@ -200,7 +213,7 @@ let displayingPost = () => {
 
         <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
         <img src="../assets/home/home center content/like btn.png" width="20rem">
-        <h6 class="p-0  my-1 ms-1">3</h6>
+        <h6 class="p-0  my-1 ms-1">${post.likes.length}</h6>
         </div>
         <div class="d-flex justify-content-start align-items-center  mx-2">
         <hr class="w-100 mt-1 mb-2">
@@ -209,10 +222,12 @@ let displayingPost = () => {
         <!-- like and comment area -->
         <div class="d-flex justify-content-around align-items-center p-0 m-0">
         
-        <button onclick="" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like btn.png" class="me-1" width="20rem"> Like</button>
+        <button onclick="likeHandler(${post['id']})" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius: 0px 0px 0px 10px;">
+        <img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like
+      </button>
 
-        <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-colwhitesmoke; border-radius:0px 0px 10px 0px;">
-        <img src="../assets/home/home center content/comment btn.png" class="me" width="35rem"> Comment</button>
+        <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px; border-radius:0px 0px 10px 0px;">
+        <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
 
         </div>
         
@@ -224,6 +239,8 @@ let displayingPost = () => {
     
 } 
 displayingPost()
+
+
 
 
 ////////////////////////////////////////////////
@@ -238,6 +255,8 @@ postBtn.addEventListener('click', () => {
         postObj = {
             id:Date.now(),
             discription: discriptionInput.value,
+            likes: [],
+            comment: [],
             file:fileInput.value,
             user: JSON.parse(localStorage.getItem('loggedInuser'))
         }
@@ -246,6 +265,8 @@ postBtn.addEventListener('click', () => {
         postObj = {
             id:id=Date.now(),
             discription: discriptionInput.value,
+            likes: [],
+            comment: [],
             user: JSON.parse(localStorage.getItem('loggedInuser'))
         }
         console.log(postObj);
@@ -310,9 +331,7 @@ postBtn.addEventListener('click', () => {
 //     // }
 });
 
-////////////////////////////////////////
-
-// delete post
+// // delete post
 
 function deleteHandler(postId) {
     // console.log(postId);
@@ -332,6 +351,7 @@ function deleteHandler(postId) {
 
 }
 
+   
 ////////////////////////////////////////
 
 // edit function
@@ -373,6 +393,8 @@ function updateHandler() {
         discription: editTextArea.value ||  oldPost['discription'],
         file: oldPost['file'],
         user: oldPost['user'],
+        likes: oldPost.likes,
+        comment: oldPost.comment
     } 
     // console.log(postObj);
 
@@ -386,7 +408,6 @@ function updateHandler() {
     // reloading the page
     location.reload()
 }
-
 
 //////////////////////////////////////////
 

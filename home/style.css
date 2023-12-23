@@ -132,6 +132,7 @@ background-color: white !important;
 @media (max-width:440px) {
     #centerBarP {
         font-size: small;
+        
     }
     .createPostH6 img {
         width: 1.1rem !important;
