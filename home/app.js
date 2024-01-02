@@ -1,4 +1,4 @@
-import { auth, db, doc, getDoc, onAuthStateChanged } from "../utilities/fireBaseConfig.js";
+import { auth, db, doc, getDoc, onAuthStateChanged, signOut } from "../utilities/fireBaseConfig.js";
 
 // sideBar
 let sideBar = document.querySelector(".siderBar");
@@ -151,8 +151,21 @@ onAuthStateChanged(auth, async(user) => {
     } else {
         window.location = "../index.html"
     }
-  });
+});
 
+// logout
+let logoutBtn = document.querySelector('#logoutBtn')
+
+logoutBtn.addEventListener('click' , () => {
+
+    signOut(auth).then(() => {
+        alert("You are SignOut sucessfully!")
+        window.location.href = '../index.html'
+      }).catch((error) => {
+        // An error happened.
+      });
+
+})
 // // posts 
 
 // let modal = document.querySelector('.modal')
@@ -491,11 +504,3 @@ onAuthStateChanged(auth, async(user) => {
 
 // //////////////////////////////////////////
 
-// let logoutBtn = document.querySelector('#logoutBtn')
-
-// logoutBtn.addEventListener('click' , () => {
-
-//     localStorage.removeItem('loggedInuser')
-
-//     window.location.href = '../index.html'
-// })

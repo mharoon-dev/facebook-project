@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth ,  createUserWithEmailAndPassword,signInWithEmailAndPassword ,onAuthStateChanged   } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth ,  createUserWithEmailAndPassword,signInWithEmailAndPassword ,onAuthStateChanged , sendPasswordResetEmail,signOut    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore , doc , setDoc , getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
   // Your web app's Firebase configuration
@@ -24,6 +24,8 @@ export {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     onAuthStateChanged,
+    sendPasswordResetEmail ,
+    signOut,
     db,
     doc,
     setDoc,
