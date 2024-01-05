@@ -142,14 +142,13 @@ onAuthStateChanged(auth, async(user) => {
       } else {
         // docSnap.data() will be undefined in this case
         console.log("No such document!");
-      }
-// if (location.pathname !== "./home/index.html") {
-//     window.location = "./home/index.html"
-// }
 
+      } 
 } else {
-    window.location = "../index.html"
+    if(location.pathname !== "../index.html") {
+        window.location = "../index.html"
     }
+}
 });
 
 
@@ -175,160 +174,197 @@ let postBtn = document.querySelector('#postBtn')
 let fileInput = document.querySelector('.fileInput')
 let discriptionInput = document.querySelector('.discriptionInput')
 
-let postObj;
-let postHandler = async() => {
-    console.log("postHandler is working!")
 
-    alert("Now saving your data in to dataBase!")
+// uploading files
+const storageRef = ref(storage, 'images/rivers.jpg');
 
-    // fire base functionality
-    const docRef = await addDoc(collection(db, "posts"), {
-            file:fileInput?.value ? fileInput.value : "" ,
-            discription:discriptionInput?.value ? discriptionInput?.value : "" ,
-            userDetails: userDetails ? userDetails : ""
-      });
-}
+const uploadTask = uploadBytesResumable(storageRef, file);
+
+// Register three observers:
+// 1. 'state_changed' observer, called any time the state changes
+// 2. Error observer, called on failure
+// 3. Completion observer, called on successful completion
+uploadTask.on('state_changed', 
+  (snapshot) => {
+    // Observe state change events such as progress, pause, and resume
+    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    console.log('Upload is ' + progress + '% done');
+    switch (snapshot.state) {
+      case 'paused':
+        console.log('Upload is paused');
+        break;
+      case 'running':
+        console.log('Upload is running');
+        break;
+    }
+  }, 
+  (error) => {
+    // Handle unsuccessful uploads
+  }, 
+  () => {
+    // Handle successful uploads on complete
+    // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      console.log('File available at', downloadURL);
+    });
+  }
+);
+
+// let postObj;
+// let postHandler = async() => {
+//     console.log("postHandler is working!")
+
+//     alert("Now saving your data!")
+
+//     // fire base functionality
+//     const docRef = await addDoc(collection(db, "posts"), {
+//             file:fileInput?.value ? fileInput.value : "" ,
+//             discription:discriptionInput?.value ? discriptionInput?.value : "" ,
+//             userDetails: userDetails ? userDetails : ""
+//       });
+// }
 postBtn.addEventListener('click' , postHandler)
 
 
-// displaying post 
+// // displaying post 
 
-let centerAreaPosts = document.querySelector('.centerArea')
+// let centerAreaPosts = document.querySelector('.centerArea')
 
-let displayingPost = async() => {
+// let displayingPost = async() => {
 
-    console.log("display post handler is working!");
+//     console.log("display post handler is working!");
 
-    const q = query(collection(db, "posts"));
+//     const q = query(collection(db, "posts"));
 
-    const querySnapshot = await getDocs(q);
-    querySnapshot?.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
-    centerAreaPosts.innerHTML += `
-         <div class="col-12 mt-4" >
-         <div class="bg-white pt-3" "
-         style="border-radius: 15px; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-         -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-         -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
+//     const querySnapshot = await getDocs(q);
+//     querySnapshot?.forEach((doc) => {
+//     console.log(doc.id, " => ", doc.data());
+//     centerAreaPosts.innerHTML += `
+//          <div class="col-12 mt-4" >
+//          <div class="bg-white pt-3" "
+//          style="border-radius: 15px; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+//          -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+//          -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
         
-         <div class="d-flex justify-content-between align-items-center p-1 ">
+//          <div class="d-flex justify-content-between align-items-center p-1 ">
         
-         <div class="d-flex justify-content-center align-items-center">
-         <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
-         <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${doc.data().userDetails.fullName}</h6>
-         </div>
+//          <div class="d-flex justify-content-center align-items-center">
+//          <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
+//          <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${doc.data().userDetails.fullName}</h6>
+//          </div>
         
-         <div class="d-flex justify-content-center align-items-center dropdown">
-         <img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
-         <ul class="dropdown-menu">
-         <li><a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
-         <li><a class="dropdown-item">Delete</a></li>
-         <li><a class="dropdown-item" href="#">Profile</a></li>
-         </ul>
+//          <div class="d-flex justify-content-center align-items-center dropdown">
+//          <img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
+//          <ul class="dropdown-menu">
+//          <li><a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
+//          <li><a class="dropdown-item">Delete</a></li>
+//          <li><a class="dropdown-item" href="#">Profile</a></li>
+//          </ul>
         
-         </div>
-         </div>
+//          </div>
+//          </div>
         
-         <!-- discription area -->
-         <div class="d-flex justify-content-start align-items-center mt-0 ps-2 p-1 pb-0">
-         <p class="mb-2" id="description">${doc.data().discription }</p>
-         </div>
+//          <!-- discription area -->
+//          <div class="d-flex justify-content-start align-items-center mt-0 ps-2 p-1 pb-0">
+//          <p class="mb-2" id="description">${doc.data().discription }</p>
+//          </div>
         
-         <!-- image area -->
-         <div class=" p-0 m-0 w-100 mb-2">
-         <img class="w-100" src="${doc.data().file ? doc.data().file : ''}">
-         </div>
+//          <!-- image area -->
+//          <div class=" p-0 m-0 w-100 mb-2">
+//          <img class="w-100" src="${doc.data().file ? doc.data().file : ''}">
+//          </div>
 
-         <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
-         <img src="../assets/home/home center content/like btn.png" width="20rem">
-         <h6 class="p-0 my-1 ms-1"></h6>
-         </div>
-         <div class="d-flex justify-content-start align-items-center  mx-2">
-         <hr class="w-100 mt-1 mb-2">
-         </div>
+//          <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
+//          <img src="../assets/home/home center content/like btn.png" width="20rem">
+//          <h6 class="p-0 my-1 ms-1"></h6>
+//          </div>
+//          <div class="d-flex justify-content-start align-items-center  mx-2">
+//          <hr class="w-100 mt-1 mb-2">
+//          </div>
         
-         <!-- like and comment area -->
-         <div class="d-flex justify-content-around align-items-center p-0 m-0">
+//          <!-- like and comment area -->
+//          <div class="d-flex justify-content-around align-items-center p-0 m-0">
         
-         <button onclick=""  class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like</button>
+//          <button onclick=""  class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like</button>
 
-         <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px;">
-         <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
+//          <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px;">
+//          <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
 
-         </div>
+//          </div>
         
-         </div>
-         </div>`;
+//          </div>
+//          </div>`;
 
-    });
+//     });
 
-//     posts.reverse().forEach((post) => {
-//         // post HTML
-//        if (post.file) {
-//         
-//        } else {
-//         centerAreaPosts.innerHTML += `
-//         <div class="col-12 mt-4" >
-//         <div class="bg-white pt-3" "
-//         style="border-radius: 15px; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-//         -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-//         -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
+// //     posts.reverse().forEach((post) => {
+// //         // post HTML
+// //        if (post.file) {
+// //         
+// //        } else {
+// //         centerAreaPosts.innerHTML += `
+// //         <div class="col-12 mt-4" >
+// //         <div class="bg-white pt-3" "
+// //         style="border-radius: 15px; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+// //         -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+// //         -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
         
-//         <div class="d-flex justify-content-between align-items-center p-1 ">
+// //         <div class="d-flex justify-content-between align-items-center p-1 ">
         
-//         <div class="d-flex justify-content-center align-items-center">
-//         <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
-//         <div>
-//         <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${post.user.fullName}</h6>
-//         </div>
-//         </div>
+// //         <div class="d-flex justify-content-center align-items-center">
+// //         <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
+// //         <div>
+// //         <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${post.user.fullName}</h6>
+// //         </div>
+// //         </div>
         
-//         <div class="d-flex justify-content-center align-items-center dropdown">
-//         ${JSON.parse(localStorage.getItem("loggedInuser")).fullName === post?.user?.fullName ? `<img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
+// //         <div class="d-flex justify-content-center align-items-center dropdown">
+// //         ${JSON.parse(localStorage.getItem("loggedInuser")).fullName === post?.user?.fullName ? `<img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
         
-//         <ul class="dropdown-menu">
-//         <li><a class="dropdown-item" onclick="editPostHandler(${post?.id})" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
-//         <li><a class="dropdown-item" onclick="deleteHandler(${post?.id})">Delete</a></li>
-//         <li><a class="dropdown-item" href="#">Profile</a></li>
-//         </ul>` :``}
+// //         <ul class="dropdown-menu">
+// //         <li><a class="dropdown-item" onclick="editPostHandler(${post?.id})" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
+// //         <li><a class="dropdown-item" onclick="deleteHandler(${post?.id})">Delete</a></li>
+// //         <li><a class="dropdown-item" href="#">Profile</a></li>
+// //         </ul>` :``}
 
         
-//         </div>
-//         </div>
+// //         </div>
+// //         </div>
         
-//         <!-- discription area -->
-//         <div class="d-flex justify-content-start align-items-center mt-1 ps-2 p-1 pb-0">
-//         <p class="mb-2" id="description">${post?.discription}</p>
-//         </div>
+// //         <!-- discription area -->
+// //         <div class="d-flex justify-content-start align-items-center mt-1 ps-2 p-1 pb-0">
+// //         <p class="mb-2" id="description">${post?.discription}</p>
+// //         </div>
 
-//         <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
-//         <img src="../assets/home/home center content/like btn.png" width="20rem">
-//         <h6 class="p-0  my-1 ms-1">${post.likes.length}</h6>
-//         </div>
-//         <div class="d-flex justify-content-start align-items-center  mx-2">
-//         <hr class="w-100 mt-1 mb-2">
-//         </div>
+// //         <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
+// //         <img src="../assets/home/home center content/like btn.png" width="20rem">
+// //         <h6 class="p-0  my-1 ms-1">${post.likes.length}</h6>
+// //         </div>
+// //         <div class="d-flex justify-content-start align-items-center  mx-2">
+// //         <hr class="w-100 mt-1 mb-2">
+// //         </div>
         
-//         <!-- like and comment area -->
-//         <div class="d-flex justify-content-around align-items-center p-0 m-0">
+// //         <!-- like and comment area -->
+// //         <div class="d-flex justify-content-around align-items-center p-0 m-0">
         
-//         <button onclick="likeHandler(${post['id']})" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius: 0px 0px 0px 10px;">
-//         <img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like
-//       </button>
+// //         <button onclick="likeHandler(${post['id']})" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius: 0px 0px 0px 10px;">
+// //         <img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like
+// //       </button>
 
-//         <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px; border-radius:0px 0px 10px 0px;">
-//         <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
+// //         <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px; border-radius:0px 0px 10px 0px;">
+// //         <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
 
-//         </div>
+// //         </div>
         
-//         </div>
-//         </div>`;
-//        }
+// //         </div>
+// //         </div>`;
+// //        }
         
-//     })
+// //     })
     
-} 
-displayingPost()
+// } 
+// displayingPost()
 
 
 

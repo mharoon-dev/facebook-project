@@ -11,15 +11,23 @@ import {
 
 import { 
   getFirestore, 
-  doc, 
-  setDoc, 
-  getDoc, 
-  addDoc, 
   collection, 
+  addDoc, 
+  setDoc, 
+  doc, 
+  getDoc, 
+  getDocs,
+  deleteDoc, 
   query, 
   where,
-  getDocs 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+import {
+  ref,
+  getStorage,
+  getDownloadURL,
+  uploadBytes
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 
 const firebaseConfig = {  
@@ -35,24 +43,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 
 export {
-    app,
-    auth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    sendPasswordResetEmail ,
-    signOut,
-    db,
-    collection,
-    addDoc,
-    setDoc,
-    doc,
-    getDoc,
-    getDocs,
-    query,
-    deleteDoc,
-    where,
+  auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  onAuthStateChanged,
+  db,
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  getDoc,
+  getDocs,
+  where,
+  query,
+  deleteDoc,
+  storage,
+  uploadBytes,
+  signOut,
+  ref,
+  getStorage,
+  getDownloadURL,
 }
