@@ -140,4 +140,4 @@ const uploadFile = async (file, fileName) => {
 };
 
 
-export { signUp, login, addInDBById, getLoggedInUser, getData, updateData }
+export { signUp, login, addInDBById, getLoggedInUser, getData, updateData ,uploadFile }
