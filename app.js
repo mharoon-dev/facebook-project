@@ -103,9 +103,9 @@ let loginPassword = document.querySelector('#loginPassword')
 let loginBtn = document.querySelector('#loginBtn')
 
 // // login handler
-let loginHandler = async() => {
-// //   // checking function
-  console.log("login handler is working!");
+// let loginHandler = async() => {
+// // //   // checking function
+//   console.log("login handler is working!");
 
 // fire base functionality
 
