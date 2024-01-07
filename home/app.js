@@ -1,4 +1,4 @@
-import { addDoc, auth, collection, db, doc, getDoc, getDocs, getDownloadURL, onAuthStateChanged, query, ref, setDoc, signOut, uploadBytes, where , uploadBytesResumable, storage } from "../utilities/fireBaseConfig.js";
+import { addDoc, auth, collection, db, doc, getDoc, getDocs, getDownloadURL, onAuthStateChanged, query, ref, setDoc, signOut, uploadBytes, where , uploadBytesResumable, storage, deleteDoc } from "../utilities/fireBaseConfig.js";
 
 // sideBar
 let sideBar = document.querySelector(".siderBar");
@@ -139,7 +139,7 @@ onAuthStateChanged(auth, async(user) => {
       
       if (docSnap.exists()) {
           userDetails = docSnap.data();
-          console.log(userDetails);
+          console.log(await userDetails);
       } else {
         // docSnap.data() will be undefined in this case
         console.log("No such document!");
@@ -180,7 +180,7 @@ let displayingPost = async() => {
 
     const querySnapshot = await getDocs(q);
     querySnapshot?.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
+    // console.log(doc.id, " => ", doc.data());
 
     if (doc.data().file) {
         centerAreaPosts.innerHTML += `
@@ -200,8 +200,8 @@ let displayingPost = async() => {
         <div class="d-flex justify-content-center align-items-center dropdown">
         <img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
         <ul class="dropdown-menu">
-        <li><a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
-        <li><a class="dropdown-item" onclick="${deletePostHandler(doc.id)}">Delete</a></li>
+        <li><a class="dropdown-item"  data-bs-toggle="modal"onclick="editPostHandler('${doc.id}')" data-bs-target="#staticBackdrop">Edit</a></li>
+        <li><a class="dropdown-item" onclick="deletePostHandler('${doc.id}')">Delete</a></li>
         <li><a class="dropdown-item" href="#">Profile</a></li>
         </ul>
        
@@ -258,8 +258,8 @@ let displayingPost = async() => {
         <div class="d-flex justify-content-center align-items-center dropdown">
         <img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
         <ul class="dropdown-menu">
-        <li><a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
-        <li><a class="dropdown-item"  onclick="${deletePostHandler(doc.id)}">Delete</a></li>
+        <li><a class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="editPostHandler('${doc.id}')">Edit</a></li>
+        <li><a class="dropdown-item" onclick="deletePostHandler('${doc.id}')">Delete</a></li>
         <li><a class="dropdown-item" href="#">Profile</a></li>
         </ul>
        
@@ -268,7 +268,7 @@ let displayingPost = async() => {
        
         <!-- discription area -->
         <div class="d-flex justify-content-start align-items-center mt-0 ps-2 p-1 pb-0">
-        <p class="mb-2" id="description">${doc.data().discription }</p>
+        <p class="mb-2" id="description">${doc.data().discription}</p>
         </div>
        
         <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
@@ -384,26 +384,46 @@ let postHandler = async() => {
 postBtn.addEventListener('click' , postHandler)
 
 
+// edit post
+let editPostText = document.querySelector('#editPostText')
+let updateBtn = document.querySelector('#updateBtn')
+let editpost;
+// window.editPostHandler = async (postId) => {
+//     console.log("postId for edit handler ==>>" + postId);
+
+//     const q = query(collection(db, "posts"));
+//     const querySnapshot = await getDocs(q);
+
+//     editpost = querySnapshot.forEach(async(doc) => {
+//         if (doc.id == postId) {
+//             editPostText.textContent = doc.data().discription
+//         }
+//     });
+// }
+
+// update post
+
+// let updatePostHandler = () => {
+    
+// }
+
+
 
 // delete post
 
-let deletePostHandler = async (postId) => {
+window.deletePostHandler = async (postId) => {
     console.log('postId ==>>' + postId);
 
-    const q = query(collection(db, "posts"));
-
-    const postsData = await getDocs(q);
-    postsData.find((data) => {
-    if (data.id == postId) data 
-});
+await deleteDoc(doc(db, "posts", await postId ));
+displayingPost()
 } 
 
-// function deleteHandler(postId) {
-//     // console.log(postId);
 
-//     // getting data form localStorage
-//     let postsFromLocalStorage = JSON.parse(localStorage.getItem('posts'))
-//     // console.log(postsFromLocalStorage);
+
+
+
+
+// function deleteHandler(postId) {
 
 //     let filtration = postsFromLocalStorage.filter( (post) => post.id !== postId)
 //     // console.log(filtration);
