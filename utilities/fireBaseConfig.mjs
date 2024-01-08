@@ -20,6 +20,8 @@ import {
   deleteDoc, 
   query, 
   where,
+  serverTimestamp,
+  orderBy,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 import {
@@ -63,10 +65,12 @@ export {
   where,
   query,
   deleteDoc,
-  storage,
-  uploadBytes,
-  signOut,
   ref,
-  uploadBytesResumable,
+  storage,
   getDownloadURL,
+  uploadBytes,
+  serverTimestamp,
+  orderBy,
+  signOut,
+  uploadBytesResumable,
 }
