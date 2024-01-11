@@ -127,7 +127,8 @@ rightSideBar.forEach((friend) => {
 
 let profileSmallImage = document.querySelector('.profileSmallImage')
 let dropdownProfileImage = document.querySelector('.dropdownProfileImage')
-let postImage = document.querySelector('.postImage')
+let postImage = document.querySelectorAll('.postImage')
+
 // checking user in logged in or not
 let uid;
 let userDetails;
@@ -146,7 +147,7 @@ onAuthStateChanged(auth, async(user) => {
           console.log(await userDetails);
 
           dropdownProfileImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png" 
-        postImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png" 
+          postImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png" 
           profileSmallImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png"
 
       } else {
@@ -162,7 +163,6 @@ onAuthStateChanged(auth, async(user) => {
 
 // logout
 let logoutBtn = document.querySelector('#logoutBtn')
-
 let logOut = logout
 if (logOut.status) {
     alert("You are SignOut sucessfully!")
@@ -183,9 +183,7 @@ let displayingPost = async() => {
 
     const querySnapshot = await getDocs(q);
     querySnapshot?.forEach((doc) => {
-    // console.log(doc.id, " => ", doc.data());
 
-    if (doc.data().file) {
         centerAreaPosts.innerHTML += `
         <div class="col-12 mt-4" >
         <div class="bg-white pt-3 post"
@@ -196,7 +194,7 @@ let displayingPost = async() => {
         <div class="d-flex justify-content-between align-items-center p-1 ">
        
         <div class="d-flex justify-content-center align-items-center">
-        <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
+        <img class="ms-2 me-2 postImage" width="40rem" src="${doc?.data()?.userDetails.profileImage ? doc?.data()?.userDetails.profileImage : `../assets/home/user account button image.png`}" style="border-radius:50% ;">
         <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${doc?.data()?.userDetails?.fullName}</h6>
         </div>
        
@@ -209,14 +207,18 @@ let displayingPost = async() => {
         </ul>
        
         </div>
+        
         </div>
        
         <!-- discription area -->
         <div class="d-flex justify-content-start align-items-center mt-0 ps-2 p-1 pb-0">
         <p class="mb-2" id="description">${doc?.data()?.discription}</p>
         </div>
-       
 
+        <!-- file (image/video) area -->
+        ${doc.data().file ? `<div class=" mt-0 mb-2 pb-0 fileDiv">
+        ${doc?.data()?.fileType == 'video/mp4' ? `<video class="postVideoUrl" controls><source src="${doc?.data()?.file}" type="video/mp4"></video>` : `<img class="postImageUrl" src="${doc?.data()?.file}" alt="Post image">`}
+        </div>` : ''}
 
         <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
         <img src="../assets/home/home center content/like btn.png" width="20rem">
@@ -238,28 +240,20 @@ let displayingPost = async() => {
        
         </div>
         </div>`;
-
         
-    }
-
-
-    });
-
-} 
+    })
+}
 displayingPost()
 
 
 // // posts 
-let modal = document.querySelector('.modal')
-let postBtn = document.querySelector('#postBtn')
 let fileInput = document.querySelector('#fileInput')
 let discriptionInput = document.querySelector('.discriptionInput')
+let postBtn = document.querySelector('#postBtn')
 
 // uploading post
 
 // let postDiv1 = centerAreaPosts.children[1]
-let postDiv = document.querySelector('.post')
-let fileDiv = document.createElement("div")
 let selectedFile;
 let selectedFileName;
 let url;
@@ -272,14 +266,15 @@ let postHandler = async() => {
         discription: discriptionInput.value || '',
         userDetails: userDetails || '',
     }
-
+    
     // uploading files
-
+    
     selectedFile = fileInput.files[0]; 
     selectedFileName = `${new Date().getTime()}-${selectedFile?.name}`;
     console.log(selectedFile);
     console.log('===> fileName ' + selectedFileName);
-  
+    
+    postObj.fileType = selectedFile.type
 
   
     const storageRef = ref(storage, selectedFileName);
@@ -313,23 +308,9 @@ let postHandler = async() => {
         console.log('file type ==>', fileNameInLowerCase);
 
         postObj.file = url
-        
-        if (fileNameInLowerCase == "image/png" || fileNameInLowerCase == "image/jpeg" || fileNameInLowerCase == "image/gif" || fileNameInLowerCase == "image/bmp" || fileNameInLowerCase == "image/tiff" || fileNameInLowerCase == "image/svg" || fileNameInLowerCase == "image/webp" || fileNameInLowerCase == "image/heif" || fileNameInLowerCase == "image/raw") {
-            let imageTag = document.createElement("img")
-            imageTag.src = url
-            fileDiv.appendChild(imageTag)
-            postDiv.insertBefore(fileDiv ,postDiv.children[2].nextSibling)
-        } else {
-            let videoTag =  `<video class="video" controls>
-            <source src="${url}" type="${fileNameInLowerCase}">`
-            fileDiv.appendChild(videoTag)
-            postDiv.insertBefore(fileDiv ,postDiv.children[2].nextSibling)
-        }
-
 
         // saving data into firestore
         const savingData = addInDB(postObj, "posts")
-        
         
       });
 
