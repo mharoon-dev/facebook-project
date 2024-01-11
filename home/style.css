@@ -26,6 +26,20 @@ background-color: white !important;
     border-radius: 20px;
     background-color:  #f5f6f7;
 }
+.profileSmallImage {
+    width: 2.7rem;
+    height: 2.7rem; 
+    object-fit: cover !important; 
+    border-radius: 50% !important;
+    overflow: hidden !important;
+}
+.dropdownProfileImage {
+    width: 2rem;
+    height: 2rem; 
+    object-fit: cover !important; 
+    border-radius: 50% !important;
+    overflow: hidden !important;
+}
 /* navbar end */
 
 
@@ -67,18 +81,15 @@ background-color: white !important;
 /* leftSide menuBar end */
 
 
-/* modal for posts */
-.input[type="file"] {
-    /*padding: 5px;
-    border: none;
-    border-radius: 10px; */
+/* create post div */
+.postImage {
+    width: 2.7rem;
+    height: 2.7rem; 
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
 }
-/* modal for posts end */
 
-/* changing the cursor on the dropdown */
-.dropdown-menu {
-    cursor: pointer;
-}
 
 
 /* |||||||||||||||||||||  media quiruies  ||||||||||||||||||||| */

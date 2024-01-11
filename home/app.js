@@ -125,7 +125,9 @@ rightSideBar.forEach((friend) => {
             </div>`
 });
 
-
+let profileSmallImage = document.querySelector('.profileSmallImage')
+let dropdownProfileImage = document.querySelector('.dropdownProfileImage')
+let postImage = document.querySelector('.postImage')
 // checking user in logged in or not
 let uid;
 let userDetails;
@@ -142,13 +144,13 @@ onAuthStateChanged(auth, async(user) => {
       if (docSnap.exists()) {
           userDetails = docSnap.data();
           console.log(await userDetails);
-        //   if (location.pathname !== "./index.html") {
-        //       window.location = "./index.html"
-        //   }
-      } else {
-        // docSnap.data() will be undefined in this case
-        console.log("No such document!");
 
+          dropdownProfileImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png" 
+        postImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png" 
+          profileSmallImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png"
+
+      } else {
+        console.log("No such document!");
       } 
 } else {
     if(location.pathname !== "../index.html") {
@@ -307,7 +309,7 @@ let postHandler = async() => {
       getDownloadURL(uploadTask.snapshot.ref).then(async(downloadURL) => {
         url = await downloadURL
         console.log('url ==>', url);
-        let fileNameInLowerCase = selectedFile.type.toLowerCase();
+        let fileNameInLowerCase = await selectedFile?.type?.toLowerCase();
         console.log('file type ==>', fileNameInLowerCase);
 
         postObj.file = url
