@@ -132,7 +132,7 @@ let postImage = document.querySelectorAll('.postImage')
 // checking user in logged in or not
 let uid;
 let userDetails;
-onAuthStateChanged(auth, async(user) => {
+let loggedInUserCheck = onAuthStateChanged(auth, async(user) => {
     if (user) {
       uid = user.uid;
       console.log(uid);
@@ -149,10 +149,13 @@ onAuthStateChanged(auth, async(user) => {
           dropdownProfileImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png" 
           postImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png" 
           profileSmallImage.src = userDetails.profileImage ? userDetails.profileImage : "../assets/home/user account button image.png"
+          return await userDetails
 
       } else {
         console.log("No such document!");
       } 
+
+      
 } else {
     if(location.pathname !== "../index.html") {
         window.location = "../index.html"
@@ -174,7 +177,6 @@ logoutBtn.addEventListener('click' , logOut)
 // displaying post 
 
 let centerAreaPosts = document.querySelector('.centerArea')
-
 let displayingPost = async() => {
 
     console.log("display post handler is working!");
@@ -182,7 +184,7 @@ let displayingPost = async() => {
     const q = query(collection(db, "posts"));
 
     const querySnapshot = await getDocs(q);
-    querySnapshot?.forEach((doc) => {
+    querySnapshot?.forEach(async(doc) => {
 
         centerAreaPosts.innerHTML += `
         <div class="col-12 mt-4" >
@@ -200,8 +202,9 @@ let displayingPost = async() => {
        
         <div class="d-flex justify-content-center align-items-center dropdown">
         <img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
+        
         <ul class="dropdown-menu">
-        <li><a class="dropdown-item"  data-bs-toggle="modal"onclick="editPostHandler('${doc.id}')" data-bs-target="#staticBackdrop">Edit</a></li>
+        <li><a class="dropdown-item"  data-bs-toggle="modal" onclick="editPostHandler('${doc.id}')" data-bs-target="#staticBackdrop">Edit</a></li>
         <li><a class="dropdown-item" onclick="deletePostHandler('${doc.id}')">Delete</a></li>
         <li><a class="dropdown-item" href="#">Profile</a></li>
         </ul>
