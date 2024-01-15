@@ -383,7 +383,6 @@ const updatePostHandler = async () => {
 };
 updateBtn.addEventListener("click", updatePostHandler);
 
-
 // delete post
 window.deletePostHandler = async (postId) => {
   console.log("postId ==>>" + postId);

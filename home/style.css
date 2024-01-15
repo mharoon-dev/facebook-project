@@ -84,6 +84,7 @@ background-color: white !important;
 /* create post div */
 .postImage {
     width: 2.7rem;
+    height: 2.7rem;
     object-fit: cover !important;
     border-radius: 50% !important;
     overflow: hidden !important;
@@ -99,20 +100,17 @@ background-color: white !important;
 /* posts */
 .fileDiv {
     width: 100% !important;
-    height: 100% !important;
+    /* height: 100% !important; */
     overflow: hidden !important;
+    object-fit: cover !important;
 }
 
-.fileDiv video {
+.postVideoUrl,.postImageUrl {
     width: 100% !important;
-    height: 100% !important;
+    /* height: 100% !important; */
     object-fit: cover !important;
 }
-.fileDiv img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-}
+
 
 
 
