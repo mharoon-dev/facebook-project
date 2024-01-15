@@ -84,8 +84,14 @@ background-color: white !important;
 /* create post div */
 .postImage {
     width: 2.7rem;
-    height: 2.7rem; 
     object-fit: cover !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+}
+#friendProfileImage {
+    width: 2.3rem;
+    object-fit: cover !important;
+    border: none !important;
     border-radius: 50% !important;
     overflow: hidden !important;
 }
@@ -159,7 +165,7 @@ background-color: white !important;
 
 @media (max-width:440px) {
     #centerBarP {
-        font-size: small;
+        font-size: 12px;
         
     }
     .createPostH6 img {

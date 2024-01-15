@@ -59,6 +59,7 @@ body {
   object-fit: cover !important; 
   border-radius: 50%;
   overflow: hidden !important;
+  border: 5px solid rgb(244, 243, 243)
 }
 .profileSmallImage {
   width: 2.7rem;
