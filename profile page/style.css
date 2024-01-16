@@ -109,6 +109,45 @@ body {
 }
 /* leftSide menuBar end */
 
+
+
+
+/* create post div */
+.postImage {
+  width: 2.7rem;
+  height: 2.7rem;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+.createPostImage {
+  width: 2.7rem;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+#friendProfileImage {
+  width: 2.3rem;
+  object-fit: cover !important;
+  border: none !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+}
+
+/* posts */
+.fileDiv {
+  width: 100% !important;
+  /* height: 100% !important; */
+  overflow: hidden !important;
+  object-fit: cover !important;
+}
+
+.postVideoUrl,.postImageUrl {
+  width: 100% !important;
+  /* height: 100% !important; */
+  object-fit: cover !important;
+}
+
 /* |||||||||||||||||||||  media quiruies  ||||||||||||||||||||| */
 
 @media (max-width: 992px) {

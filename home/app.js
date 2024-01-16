@@ -141,6 +141,7 @@ rightSideBar.forEach((friend) => {
 let profileSmallImage = document.querySelector(".profileSmallImage");
 let dropdownProfileImage = document.querySelector(".dropdownProfileImage");
 let postImage = document.querySelector(".postImage");
+let createPostImage = document.querySelector(".createPostImage");
 
 // checking user in logged in or not
 let uid;
@@ -162,13 +163,17 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
       dropdownProfileImage.src = userDetails.profileImage
         ? userDetails.profileImage
         : "../assets/home/user account button image.png";
-      postImage.src = userDetails.profileImage
-        ? userDetails.profileImage
-        : "../assets/home/user account button image.png";
-
       profileSmallImage.src = userDetails.profileImage
         ? userDetails.profileImage
         : "../assets/home/user account button image.png";
+      createPostImage.src = userDetails.profileImage
+        ? userDetails.profileImage
+        : "../assets/home/user account button image.png";
+      // postImage.src = userDetails.profileImage
+      //   ? userDetails.profileImage
+      //   : "../assets/home/user account button image.png";
+
+
       return await userDetails;
     } else {
       console.log("No such document!");
@@ -290,7 +295,6 @@ let postBtn = document.querySelector("#postBtn");
 
 // uploading post
 
-// let postDiv1 = centerAreaPosts.children[1]
 let selectedFile;
 let selectedFileName;
 let url;
@@ -345,6 +349,9 @@ let postHandler = async () => {
 
         // saving data into firestore
         const savingData = addInDB(postObj, "posts");
+        if (await url) {
+          window.location.reload();
+        }
       });
     }
   );

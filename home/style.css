@@ -89,6 +89,12 @@ background-color: white !important;
     border-radius: 50% !important;
     overflow: hidden !important;
 }
+.createPostImage {
+    width: 2.7rem;
+    object-fit: cover !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+}
 #friendProfileImage {
     width: 2.3rem;
     object-fit: cover !important;
