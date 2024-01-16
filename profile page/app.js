@@ -9,9 +9,16 @@ import {
   getDownloadURL,
   onAuthStateChanged,
   query,
+  ref,
+  storage,
   uploadBytesResumable,
 } from "../utilities/fireBaseConfig.mjs";
-import { addInDB, getData, updateData, uploadFile } from "../utilities/functions.mjs";
+import {
+  addInDB,
+  getData,
+  updateData,
+  uploadFile,
+} from "../utilities/functions.mjs";
 
 // sideBar
 let sideBar = document.querySelector(".siderBar");
@@ -103,7 +110,7 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
     if (docSnap.exists()) {
       userDetails = docSnap.data();
       if (await userDetails) {
-        displayingPost()        
+        displayingPost();
       }
       console.log(await userDetails);
       userName.textContent = userDetails.fullName ? userDetails.fullName : "";
@@ -172,7 +179,7 @@ let displayingPost = async () => {
 
   const querySnapshot = await getDocs(q);
   querySnapshot?.forEach(async (doc) => {
-    if (doc.data().userDetails.email == await userDetails.email) {
+    if (doc.data().userDetails.email == (await userDetails.email)) {
       centerAreaPosts.innerHTML += `
             <div class="col-12 mt-4" >
             <div class="bg-white pt-3 post"
@@ -272,59 +279,61 @@ let postObj;
 let fileArea;
 
 let postHandler = async () => {
-  postObj = {
-    discription: discriptionInput.value || "",
-    userDetails: userDetails || "",
-  };
+  // Check if either description or file is provided
+  if (discriptionInput.value || fileInput.files.length > 0) {
+    postObj = {
+      discription: discriptionInput.value || "",
+      userDetails: userDetails || "",
+    };
 
-  // uploading files
+    // Check if a file is selected
+    if (fileInput.files.length > 0) {
+      selectedFile = fileInput.files[0];
+      selectedFileName = `${new Date().getTime()}-${selectedFile.name}`;
+      postObj.fileType = selectedFile.type;
 
-  selectedFile = fileInput.files[0];
-  selectedFileName = `${new Date().getTime()}-${selectedFile?.name}`;
-  console.log(selectedFile);
-  console.log("===> fileName " + selectedFileName);
+      const storageRef = ref(storage, selectedFileName);
+      const uploadTask = uploadBytesResumable(storageRef, selectedFile);
 
-  postObj.fileType = selectedFile.type;
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-  const storageRef = ref(storage, selectedFileName);
-
-  const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
-  uploadTask.on(
-    "state_changed",
-    (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-      switch (snapshot.state) {
-        case "paused":
-          console.log("Upload is paused");
-          break;
-        case "running":
-          console.log("Upload is " + progress + "% done");
-          break;
-      }
-    },
-    (error) => {
-      // Handle unsuccessful uploads
-      console.error("Upload error:", error);
-    },
-    async () => {
-      getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-        url = await downloadURL;
-        console.log("url ==>", url);
-        let fileNameInLowerCase = await selectedFile?.type?.toLowerCase();
-        console.log("file type ==>", fileNameInLowerCase);
-
-        postObj.file = url;
-
-        // saving data into firestore
-        const savingData = addInDB(postObj, "posts");
-        if (await url) {
-          window.location.reload();
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is " + progress + "% done");
+              break;
+          }
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+          console.error("Upload error:", error);
+        },
+        async () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            url = await downloadURL;
+            postObj.file = url;
+            // saving data into firestore
+            const savingData = await addInDB(postObj, "posts");
+            window.location.reload();
+          });
         }
-      });
+      );
+    } else {
+      // If no file is selected, save the post with description only
+      console.log('No file added!');
+      const savingData = await addInDB(postObj, "posts");
+      window.location.reload();
     }
-  );
+  } else {
+    // If neither description nor file is provided, do not proceed
+    alert('No description or file added!');
+  }
 };
 postBtn.addEventListener("click", postHandler);
 

@@ -298,6 +298,16 @@
       </div>
     </div>
 
+     <!-- right bar -->
+     <div class="col-3 d-none d-md-block ms-5 mt-3  rightbar" style="display: block;" >
+      <div class="row rightSideBarRow">
+          <div class="col-12">
+              <h6 class="ms-2">Contacts</h6>
+          </div>
+      
+  </div>
+</div>
+<!-- right bar end  -->
     
  
 </div>
@@ -308,16 +318,7 @@
 
 </div>
 
- <!-- right bar -->
- <div class="offset-8 col-3 d-none d-md-block  rightbar" style="display: block;position: fixed; margin-top: 30rem;" >
-  <div class="row rightSideBarRow">
-      <div class="col-12">
-          <h6 class="ms-2">Contacts</h6>
-      </div>
-      
-  </div>
-</div>
-<!-- right bar end  -->
+
 <!-- posts and friends end  -->
 
 
@@ -336,10 +337,10 @@
                   <div class="modal-body">
                     <form>
                       <div>
-                          <!-- <label class="fileInput" for="fileInput">Photo/Video</label>
-                          <input type="file" id="fileInput" name="fileInput" style="display: none;"> -->
+                          <label class="fileInputLabel" for="fileInput">Photo/Video</label>
+                          <input type="file" name="fileInput" id="fileInput" style="display: none !important;" >
   
-                          <input class="fileInput" type="text" placeholder="&nbsp;photo/video URL" style="width: 100%; height: 2.5rem; border-radius: 8px; border: 1px solid lightgrey; background-color: white;">
+                          <!-- <input class="fileInput" type="file"> -->
                       </div>
                         <div class="mb-3">
                             <label for="message-text" class="col-form-label">Discription:</label>
@@ -358,24 +359,24 @@
           <!-- modal for posts end -->
   
   
-          <!-- modal for edit post -->
-          <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body" id="editPostText">
-                      <textarea class="w-100 editTextArea" style="height: 2rem; border-radius: 7px; border: 1px solid lightgrey;" name=""></textarea>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="updateBtn" onclick="updateHandler()">Update</button>
-                </div>
+        <!-- modal for edit post -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+              <div class="modal-body" >
+                  <textarea id="editPostText" class="w-100 editTextArea" style="height: 2rem; border-radius: 7px; border: 1px solid lightgrey;" name=""></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="updateBtn">Update</button>
             </div>
-            </div>
-          <!-- modal for edit posts end -->
+          </div>
+        </div>
+        </div>
+      <!-- modal for edit posts end -->
 
 
 

@@ -19,6 +19,8 @@ import {
   deleteDoc,
 } from "../utilities/fireBaseConfig.mjs";
 
+
+
 // sideBar
 let sideBar = document.querySelector(".siderBar");
 let toggleBtn = document.querySelector("#toggleBtn");
@@ -40,7 +42,7 @@ crossBtn.addEventListener("click", () => {
 let menuBarName = [
   {
     image: "../assets/home/home content/user account button image.png",
-    name: "userName",
+    name: "UserName",
   },
   {
     image: "../assets/home/home content/1 person image.png",
@@ -83,9 +85,9 @@ let leftSideBarRow = document.querySelector(".leftSideBarRow");
 // left side bar home content
 menuBarName.forEach((menuCard) => {
   leftSideBarRow.innerHTML += `
-            <div class="col-12 p-4 ps-3 leftBarBtn">
-                <img style="border-radius:50%;" src="${menuCard["image"]}" width="35rem">
-                <span id="${menuCard["name"]}">${menuCard["name"]}</span>
+            <div class="col-12 p-4 ps-3 d-flex justify-content-start align-items-center leftBarBtn">
+                <img style="border-radius:50%;" class="me-2" src="${menuCard["image"]}" width="35rem">
+                <span id="leftBar${menuCard["name"]}">${menuCard["name"]}</span>
             </div>`;
 });
 
@@ -138,12 +140,17 @@ rightSideBar.forEach((friend) => {
             </div>`;
 });
 
+
+
+// checking user in logged in or not
+
 let profileSmallImage = document.querySelector(".profileSmallImage");
 let dropdownProfileImage = document.querySelector(".dropdownProfileImage");
 let postImage = document.querySelector(".postImage");
 let createPostImage = document.querySelector(".createPostImage");
+let leftBarUserName = document.querySelector("#leftBarUserName");
 
-// checking user in logged in or not
+
 let uid;
 let userDetails;
 let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
@@ -160,6 +167,9 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
       userDetails = docSnap.data();
       console.log(await userDetails);
 
+      leftBarUserName.textContent = userDetails.fullName
+        ? userDetails.fullName
+        : "User Name";
       dropdownProfileImage.src = userDetails.profileImage
         ? userDetails.profileImage
         : "../assets/home/user account button image.png";
@@ -172,7 +182,6 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
       // postImage.src = userDetails.profileImage
       //   ? userDetails.profileImage
       //   : "../assets/home/user account button image.png";
-
 
       return await userDetails;
     } else {
@@ -193,6 +202,8 @@ if (logOut.status) {
   window.location.href = "../index.html";
 }
 logoutBtn.addEventListener("click", logOut);
+
+
 
 // displaying post
 
@@ -302,59 +313,60 @@ let postObj;
 let fileArea;
 
 let postHandler = async () => {
-  postObj = {
-    discription: discriptionInput.value || "",
-    userDetails: userDetails || "",
-  };
+  // Check if either description or file is provided
+  if (discriptionInput.value || fileInput.files.length > 0) {
+    postObj = {
+      discription: discriptionInput.value || "",
+      userDetails: userDetails || "",
+    };
 
-  // uploading files
+    // Check if a file is selected
+    if (fileInput.files.length > 0) {
+      selectedFile = fileInput.files[0];
+      selectedFileName = `${new Date().getTime()}-${selectedFile.name}`;
+      postObj.fileType = selectedFile.type;
 
-  selectedFile = fileInput.files[0];
-  selectedFileName = `${new Date().getTime()}-${selectedFile?.name}`;
-  console.log(selectedFile);
-  console.log("===> fileName " + selectedFileName);
+      const storageRef = ref(storage, selectedFileName);
+      const uploadTask = uploadBytesResumable(storageRef, selectedFile);
 
-  postObj.fileType = selectedFile.type;
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-  const storageRef = ref(storage, selectedFileName);
-
-  const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
-  uploadTask.on(
-    "state_changed",
-    (snapshot) => {
-      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-      switch (snapshot.state) {
-        case "paused":
-          console.log("Upload is paused");
-          break;
-        case "running":
-          console.log("Upload is " + progress + "% done");
-          break;
-      }
-    },
-    (error) => {
-      // Handle unsuccessful uploads
-      console.error("Upload error:", error);
-    },
-    async () => {
-      getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-        url = await downloadURL;
-        console.log("url ==>", url);
-        let fileNameInLowerCase = await selectedFile?.type?.toLowerCase();
-        console.log("file type ==>", fileNameInLowerCase);
-
-        postObj.file = url;
-
-        // saving data into firestore
-        const savingData = addInDB(postObj, "posts");
-        if (await url) {
-          window.location.reload();
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is " + progress + "% done");
+              break;
+          }
+        },
+        (error) => {
+          console.error("Upload error:", error);
+        },
+        async () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+            url = await downloadURL;
+            postObj.file = url;
+            // saving data into firestore
+            const savingData = await addInDB(postObj, "posts");
+            window.location.reload();
+          });
         }
-      });
+      );
+    } else {
+      // No file is selected
+      console.log("No file added!");
+      const savingData = await addInDB(postObj, "posts");
+      window.location.reload();
     }
-  );
+  } else {
+    // description or file does not provided
+    alert("No description or file added!");
+  }
 };
 postBtn.addEventListener("click", postHandler);
 
@@ -378,8 +390,8 @@ window.editPostHandler = async (postId) => {
   });
 };
 
+// update handler
 let updateBtn = document.querySelector("#updateBtn");
-
 const updatePostHandler = async () => {
   selectedPost.discription = editPostText.value;
   console.log(await selectedPost);
