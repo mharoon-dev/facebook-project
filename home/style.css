@@ -40,6 +40,16 @@ background-color: white !important;
     border-radius: 50% !important;
     overflow: hidden !important;
 }
+.nav-link {
+    padding-top:0.5rem;
+    padding-bottom:0.5rem;
+    padding-left:0.7rem;
+    padding-right:0.7rem;
+}
+
+.homeBtnImage {
+    border-bottom: 3px solid  #038cd4;
+}
 /* navbar end */
 
 

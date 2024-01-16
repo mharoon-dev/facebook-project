@@ -85,11 +85,16 @@ let leftSideBarRow = document.querySelector(".leftSideBarRow");
 // left side bar home content
 menuBarName.forEach((menuCard) => {
   leftSideBarRow.innerHTML += `
-            <div class="col-12 p-4 ps-3 d-flex justify-content-start align-items-center leftBarBtn">
+            <div id="SideBar${menuCard["name"]}Div" class="col-12 p-4 ps-3 d-flex justify-content-start align-items-center leftBarBtn">
                 <img style="border-radius:50%;" class="me-2" src="${menuCard["image"]}" width="35rem">
                 <span id="leftBar${menuCard["name"]}">${menuCard["name"]}</span>
             </div>`;
 });
+
+const SideBarUserNameDiv = document.getElementById('SideBarUserNameDiv')
+SideBarUserNameDiv.addEventListener('click' , () => {
+  window.location = '../profile page/profile.html'
+})
 
 // right side menu
 let rightSideBar = [
@@ -139,7 +144,6 @@ rightSideBar.forEach((friend) => {
                 <span id="${friend["name"]}">${friend["name"]}</span>
             </div>`;
 });
-
 
 
 // checking user in logged in or not
