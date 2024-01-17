@@ -102,9 +102,12 @@ let dropdownProfileImage = document.querySelector(".dropdownProfileImage");
 let postImage = document.querySelector(".postImage");
 let userName = document.getElementById("userName");
 
+let uid;
+let userDetails;
+
 let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
   if (user) {
-    uid = user.uid;
+    uid = await user.uid;
     console.log(uid);
 
     const docRef = doc(db, "users", uid);
@@ -139,16 +142,15 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
 });
 
 
+
 // bg porofile image
 let bgProfileFileInput = document.querySelector('#bgProfileFileInput')
-bgProfileImage.addEventListener('click' , () => {
+bgProfileImage.addEventListener('dblclick' , () => {
   bgProfileFileInput.click()
 })
 
 let BgFile;
 let bgSelectedProfileImage;
-let uidForBg;
-let userDetailsForBg;
 
 let selectedBgProfile = bgProfileFileInput.addEventListener(
   "change",
@@ -160,13 +162,14 @@ let selectedBgProfile = bgProfileFileInput.addEventListener(
 
     if (BgFile.type !== "video/mp4") {
       console.log(BgFile.type);
-      let uploadbBgProfileImage = await uploadFile(BgFile, bgSelectedProfileImage);
+      let uploadProfileImage = await uploadFile(BgFile, bgSelectedProfileImage);
       console.log("your file is uploaded!");
-      let saveImage = userDetailsForBg.bgProfileImage = uploadbBgProfileImage.downloadURL
-      console.log(await userDetailsForBg);
+      let saveImage = (userDetails.bgProfileImage =
+        uploadProfileImage.downloadURL);
+      console.log(await userDetails);
 
-      if (userDetailsForBg.bgProfileImage) {
-        let addBgProfileImage = await updateData(userDetailsForBg, uidForBg, "users");
+      if (userDetails.bgProfileImage) {
+        let addBgProfileImage = await updateData(userDetails, uid, "users");
         window.location.reload();
         return await downloadURL;
       }
@@ -179,19 +182,14 @@ let selectedBgProfile = bgProfileFileInput.addEventListener(
 
 
 
-
-/// profile image
+// profile image
 let profileFileInput = document.getElementById("profileFileInput");
-
-userProfileImage.addEventListener("click", function () {
+userProfileImage.addEventListener("dblclick", function () {
   document.getElementById("profileFileInput").click();
 });
 
-
 let file;
 let selectedProfileImage;
-let uid;
-let userDetails;
 
 let selectedProfile = profileFileInput.addEventListener(
   "change",
@@ -220,6 +218,8 @@ let selectedProfile = profileFileInput.addEventListener(
   }
 );
 
+
+// displaying posts
 let centerAreaPosts = document.querySelector(".centerArea");
 let displayingPost = async (loggedInuserDetails) => {
   console.log("display post handler is working!");
@@ -312,7 +312,6 @@ let displayingPost = async (loggedInuserDetails) => {
     }
   });
 };
-// displayingPost();
 
 // // posts
 let fileInput = document.querySelector("#fileInput");

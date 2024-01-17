@@ -61,6 +61,10 @@ body {
   overflow: hidden !important;
   border: 5px solid rgb(244, 243, 243)
 }
+#bgProfileImage {
+  object-fit: cover !important; 
+  overflow: hidden !important;
+}
 .profileSmallImage {
   width: 2.7rem;
   height: 2.7rem; 
