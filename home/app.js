@@ -19,8 +19,6 @@ import {
   deleteDoc,
 } from "../utilities/fireBaseConfig.mjs";
 
-
-
 // sideBar
 let sideBar = document.querySelector(".siderBar");
 let toggleBtn = document.querySelector("#toggleBtn");
@@ -91,10 +89,10 @@ menuBarName.forEach((menuCard) => {
             </div>`;
 });
 
-const SideBarUserNameDiv = document.getElementById('SideBarUserNameDiv')
-SideBarUserNameDiv.addEventListener('click' , () => {
-  window.location = '../profile page/profile.html'
-})
+const SideBarUserNameDiv = document.getElementById("SideBarUserNameDiv");
+SideBarUserNameDiv.addEventListener("click", () => {
+  window.location = "../profile page/profile.html";
+});
 
 // right side menu
 let rightSideBar = [
@@ -145,7 +143,6 @@ rightSideBar.forEach((friend) => {
             </div>`;
 });
 
-
 // checking user in logged in or not
 
 let profileSmallImage = document.querySelector(".profileSmallImage");
@@ -153,7 +150,6 @@ let dropdownProfileImage = document.querySelector(".dropdownProfileImage");
 let postImage = document.querySelector(".postImage");
 let createPostImage = document.querySelector(".createPostImage");
 let leftBarUserName = document.querySelector("#leftBarUserName");
-
 
 let uid;
 let userDetails;
@@ -169,6 +165,8 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
 
     if (docSnap.exists()) {
       userDetails = docSnap.data();
+      displayingPost(userDetails);
+
       console.log(await userDetails);
 
       leftBarUserName.textContent = userDetails.fullName
@@ -207,12 +205,10 @@ if (logOut.status) {
 }
 logoutBtn.addEventListener("click", logOut);
 
-
-
 // displaying post
 
 let centerAreaPosts = document.querySelector(".centerArea");
-let displayingPost = async () => {
+let displayingPost = async (loggedInuserDetails) => {
   console.log("display post handler is working!");
 
   const q = query(collection(db, "posts"));
@@ -239,7 +235,7 @@ let displayingPost = async () => {
             }</h6>
             </div>
            
-            <div class="d-flex justify-content-center align-items-center dropdown">
+            ${doc.data().userDetails.email == loggedInuserDetails.email ? `<div class="d-flex justify-content-center align-items-center dropdown">
             <img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
     
             
@@ -253,7 +249,7 @@ let displayingPost = async () => {
             <li><a class="dropdown-item" href="#">Profile</a></li>
             </ul>
            
-            </div>
+            </div>` : ''}
             
             </div>
            
@@ -301,7 +297,6 @@ let displayingPost = async () => {
             </div>`;
   });
 };
-displayingPost();
 
 // // posts
 let fileInput = document.querySelector("#fileInput");

@@ -92,7 +92,7 @@ background-color: white !important;
 
 
 /* create post div */
-.postImage {
+.postImage,.createPostImage {
     width: 2.7rem;
     height: 2.7rem;
     object-fit: cover !important;

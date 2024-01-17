@@ -93,8 +93,11 @@ rightSideBar.forEach((friend) => {
             </div>`;
 });
 
+
+// check loggedin user
 let userProfileImage = document.getElementById("userProfileImage");
 let profileSmallImage = document.querySelector(".profileSmallImage");
+let bgProfileImage = document.querySelector('#bgProfileImage')
 let dropdownProfileImage = document.querySelector(".dropdownProfileImage");
 let postImage = document.querySelector(".postImage");
 let userName = document.getElementById("userName");
@@ -110,13 +113,16 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
     if (docSnap.exists()) {
       userDetails = docSnap.data();
       if (await userDetails) {
-        displayingPost();
+        displayingPost(userDetails);
       }
       console.log(await userDetails);
       userName.textContent = userDetails.fullName ? userDetails.fullName : "";
       userProfileImage.src = userDetails.profileImage
         ? userDetails.profileImage
         : "../assets/home/user account button image.png";
+      bgProfileImage.src = userDetails.bgProfileImage
+        ? userDetails.bgProfileImage
+        : '';
       postImage.src = userDetails.profileImage
         ? userDetails.profileImage
         : "../assets/home/user account button image.png";
@@ -132,12 +138,55 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
   }
 });
 
+
+// bg porofile image
+let bgProfileFileInput = document.querySelector('#bgProfileFileInput')
+bgProfileImage.addEventListener('click' , () => {
+  bgProfileFileInput.click()
+})
+
+let BgFile;
+let bgSelectedProfileImage;
+let uidForBg;
+let userDetailsForBg;
+
+let selectedBgProfile = bgProfileFileInput.addEventListener(
+  "change",
+  async function (event) {
+    BgFile = event.target.files[0];
+    bgSelectedProfileImage = `${new Date().getTime()}-${BgFile?.name}`;
+    console.log(BgFile);
+    console.log(bgSelectedProfileImage);
+
+    if (BgFile.type !== "video/mp4") {
+      console.log(BgFile.type);
+      let uploadbBgProfileImage = await uploadFile(BgFile, bgSelectedProfileImage);
+      console.log("your file is uploaded!");
+      let saveImage = userDetailsForBg.bgProfileImage = uploadbBgProfileImage.downloadURL
+      console.log(await userDetailsForBg);
+
+      if (userDetailsForBg.bgProfileImage) {
+        let addBgProfileImage = await updateData(userDetailsForBg, uidForBg, "users");
+        window.location.reload();
+        return await downloadURL;
+      }
+    } else {
+      console.log("sorry your selected file is video!");
+    }
+  }
+);
+
+
+
+
+
 /// profile image
 let profileFileInput = document.getElementById("profileFileInput");
 
 userProfileImage.addEventListener("click", function () {
   document.getElementById("profileFileInput").click();
 });
+
 
 let file;
 let selectedProfileImage;
@@ -172,14 +221,14 @@ let selectedProfile = profileFileInput.addEventListener(
 );
 
 let centerAreaPosts = document.querySelector(".centerArea");
-let displayingPost = async () => {
+let displayingPost = async (loggedInuserDetails) => {
   console.log("display post handler is working!");
 
   const q = query(collection(db, "posts"));
 
   const querySnapshot = await getDocs(q);
   querySnapshot?.forEach(async (doc) => {
-    if (doc.data().userDetails.email == (await userDetails.email)) {
+    if (doc.data().userDetails.email == loggedInuserDetails.email) {
       centerAreaPosts.innerHTML += `
             <div class="col-12 mt-4" >
             <div class="bg-white pt-3 post"
