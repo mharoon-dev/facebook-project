@@ -1,4 +1,11 @@
-import { addInDB, logout, updateData } from "../utilities/functions.mjs";
+import {
+  addInDB,
+  addInDBById,
+  deleteData,
+  getAllDataOrderedByTimestamp,
+  logout,
+  updateData,
+} from "../utilities/functions.mjs";
 import {
   addDoc,
   auth,
@@ -211,105 +218,109 @@ let centerAreaPosts = document.querySelector(".centerArea");
 let displayingPost = async (loggedInuserDetails) => {
   console.log("display post handler is working!");
 
-  const q = query(collection(db, "posts"));
+  try {
+    let getPostData = await getAllDataOrderedByTimestamp("posts");
+    console.log(getPostData);
 
-  const querySnapshot = await getDocs(q);
-  querySnapshot?.forEach(async (doc) => {
-    centerAreaPosts.innerHTML += `
-            <div class="col-12 mt-4" >
-            <div class="bg-white pt-3 post"
-            style="border-radius: 15px; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-            -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-            -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
-           
-            <div class="d-flex justify-content-between align-items-center p-1 ">
-           
-            <div class="d-flex justify-content-center align-items-center">
-            <img class="ms-2 me-2 postImage" width="40rem" src="${
-              doc?.data()?.userDetails.profileImage
-                ? doc?.data()?.userDetails.profileImage
-                : `../assets/home/user account button image.png`
-            }" style="border-radius:50% ;">
-            <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${
-              doc?.data()?.userDetails?.fullName
-            }</h6>
-            </div>
-           
-            ${doc.data().userDetails.email == loggedInuserDetails.email ? `<div class="d-flex justify-content-center align-items-center dropdown">
-            <img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
-    
-            
-            <ul class="dropdown-menu">
-            <li><a class="dropdown-item"  data-bs-toggle="modal" onclick="editPostHandler('${
-              doc.id
-            }')" data-bs-target="#staticBackdrop">Edit</a></li>
-            <li><a class="dropdown-item" onclick="deletePostHandler('${
-              doc.id
-            }')">Delete</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            </ul>
-           
-            </div>` : ''}
-            
-            </div>
-           
-            <!-- discription area -->
-            <div class="d-flex justify-content-start align-items-center mt-0 ps-2 p-1 pb-0">
-            <p class="mb-2" id="description">${doc?.data()?.discription}</p>
-            </div>
-    
-            <!-- file (image/video) area -->
-            ${
-              doc.data().file
-                ? `<div class=" mt-0 mb-2 pb-0 fileDiv">
-            ${
-              doc?.data()?.fileType == "video/mp4"
-                ? `<video class="postVideoUrl" controls><source src="${
-                    doc?.data()?.file
-                  }" type="video/mp4"></video>`
-                : `<img class="postImageUrl" src="${
-                    doc?.data()?.file
-                  }" alt="Post image">`
-            }
-            </div>`
-                : ""
-            }
-    
-            <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
-            <img src="../assets/home/home center content/like btn.png" width="20rem">
-            <h6 class="p-0 my-1 ms-1"></h6>
-            </div>
-            <div class="d-flex justify-content-start align-items-center  mx-2">
-            <hr class="w-100 mt-1 mb-2">
-            </div>
-           
-            <!-- like and comment area -->
-            <div class="d-flex justify-content-around align-items-center p-0 m-0">
-           
-            <button onclick=""  class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like</button>
-    
-            <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px;">
-            <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
-    
-            </div>
-           
-            </div>
-            </div>`;
-  });
+    if (getPostData.status) {
+      getPostData.data.reverse().forEach(async (doc) => {
+        centerAreaPosts.innerHTML += `
+          <div class="col-12 mt-4" >
+          <div class="bg-white pt-3 post"
+          style="border-radius: 15px; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+          -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
+          -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
+         
+          <div class="d-flex justify-content-between align-items-center p-1 ">
+         
+          <div class="d-flex justify-content-center align-items-center">
+          <img class="ms-2 me-2 postImage" width="40rem" src="${
+            doc.data()?.userDetails.profileImage
+              ? doc.data()?.userDetails.profileImage
+              : `../assets/home/user account button image.png`
+          }" style="border-radius:50% ;">
+          <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${
+            doc.data()?.userDetails?.fullName
+          }</h6>
+          </div>
+         
+          ${
+            doc.data().userDetails.email == loggedInuserDetails.email
+              ? `<div class="d-flex justify-content-center align-items-center dropdown">
+          <img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
+  
+          
+          <ul class="dropdown-menu">
+          <li><a class="dropdown-item"  data-bs-toggle="modal" onclick="editPostHandler('${doc.id}')" data-bs-target="#staticBackdrop">Edit</a></li>
+          <li><a class="dropdown-item" onclick="deletePostHandler('${doc.id}')">Delete</a></li>
+          <li><a class="dropdown-item" href="#">Profile</a></li>
+          </ul>
+         
+          </div>`
+              : ""
+          }
+          
+          </div>
+         
+          <!-- discription area -->
+          <div class="d-flex justify-content-start align-items-center mt-0 ps-2 p-1 pb-0">
+          <p class="mb-2" id="description">${doc.data()?.discription}</p>
+          </div>
+  
+          <!-- file (image/video) area -->
+          ${
+            doc.data()?.file
+              ? `<div class=" mt-0 mb-2 pb-0 fileDiv">
+          ${
+            doc.data()?.fileType == "video/mp4"
+              ? `<video class="postVideoUrl" controls><source src="${
+                  doc.data()?.file
+                }" type="video/mp4"></video>`
+              : `<img class="postImageUrl" src="${
+                  doc.data()?.file
+                }" alt="Post image">`
+          }
+          </div>`
+              : ""
+          }
+  
+          <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
+          <img src="../assets/home/home center content/like btn.png" width="20rem">
+          <h6 class="p-0 my-1 ms-1"></h6>
+          </div>
+          <div class="d-flex justify-content-start align-items-center  mx-2">
+          <hr class="w-100 mt-1 mb-2">
+          </div>
+         
+          <!-- like and comment area -->
+          <div class="d-flex justify-content-around align-items-center p-0 m-0">
+         
+          <button onclick=""  class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like</button>
+  
+          <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px;">
+          <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
+  
+          </div>
+         
+          </div>
+          </div>`;
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+  }
 };
 
-// // posts
+// posts
 let fileInput = document.querySelector("#fileInput");
 let discriptionInput = document.querySelector(".discriptionInput");
 let postBtn = document.querySelector("#postBtn");
 
 // uploading post
-
 let selectedFile;
 let selectedFileName;
 let url;
 let postObj;
-let fileArea;
 
 let postHandler = async () => {
   // Check if either description or file is provided
@@ -352,6 +363,8 @@ let postHandler = async () => {
             postObj.file = url;
             // saving data into firestore
             const savingData = await addInDB(postObj, "posts");
+            console.log((await postObj) + " ===>> postObj");
+            alert("your post is saved");
             window.location.reload();
           });
         }
@@ -376,36 +389,60 @@ let selectedPost;
 window.editPostHandler = async (postId) => {
   console.log("postId for edit handler ==>>" + postId);
 
-  const q = query(collection(db, "posts"));
-  const querySnapshot = await getDocs(q);
+  try {
+    const getPostsForEdit = await getAllDataOrderedByTimestamp("posts");
+    console.log(getPostsForEdit);
 
-  selectedPost = querySnapshot.forEach(async (post) => {
-    if (post.id == postId) {
-      editPostText.textContent = post.data().discription;
-      console.log(post.data());
-      selectedPostId = await post.id;
-      selectedPost = await post.data();
+    if (getPostsForEdit.status) {
+      selectedPost = getPostsForEdit.data.forEach(async (post) => {
+        if (post.id == postId) {
+          console.log(post.data());
+          editPostText.textContent = post.data().discription == "" ? "" : post.data().discription;
+          selectedPostId = await post.id;
+          selectedPost = await post.data();
+        }
+      });
     }
-  });
+  } catch (error) {
+    console.log(error + " ==>> error");
+  }
 };
 
 // update handler
 let updateBtn = document.querySelector("#updateBtn");
 const updatePostHandler = async () => {
   selectedPost.discription = editPostText.value;
-  console.log(await selectedPost);
-  updateData(selectedPost, selectedPostId, "posts");
-  setTimeout(() => {
-    window.location.reload();
-  }, 3000);
+  console.log("Selected post:", selectedPost);
+  console.log("Selected post ID:", selectedPostId);
+
+  try {
+    const updatePost = await updateData(selectedPost, selectedPostId, "posts");
+
+    if (updatePost.status) {
+      // alert("Post updated!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 8000);
+    } else {
+      alert(
+        "Failed to update post: " + (updatePost.message || "Unknown error")
+      );
+    }
+  } catch (error) {
+    console.error("Error updating post:", error);
+    alert("Error updating post: " + error.message);
+  }
 };
 updateBtn.addEventListener("click", updatePostHandler);
 
 // delete post
 window.deletePostHandler = async (postId) => {
   console.log("postId ==>>" + postId);
-  await deleteDoc(doc(db, "posts", await postId));
-  await window.location.reload();
+  deleteDoc(doc(db, "posts", await postId));
+    alert(await "Your post has deleted!");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
 };
 
 // let likeHandler = (postId) => {

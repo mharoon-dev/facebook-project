@@ -97,7 +97,6 @@ rightSideBar.forEach((friend) => {
 // check loggedin user
 let userProfileImage = document.getElementById("userProfileImage");
 let profileSmallImage = document.querySelector(".profileSmallImage");
-let bgProfileImage = document.querySelector('#bgProfileImage')
 let dropdownProfileImage = document.querySelector(".dropdownProfileImage");
 let postImage = document.querySelector(".postImage");
 let userName = document.getElementById("userName");
@@ -123,9 +122,6 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
       userProfileImage.src = userDetails.profileImage
         ? userDetails.profileImage
         : "../assets/home/user account button image.png";
-      bgProfileImage.src = userDetails.bgProfileImage
-        ? userDetails.bgProfileImage
-        : '';
       postImage.src = userDetails.profileImage
         ? userDetails.profileImage
         : "../assets/home/user account button image.png";
@@ -144,40 +140,49 @@ let loggedInUserCheck = onAuthStateChanged(auth, async (user) => {
 
 
 // bg porofile image
-let bgProfileFileInput = document.querySelector('#bgProfileFileInput')
-bgProfileImage.addEventListener('dblclick' , () => {
-  bgProfileFileInput.click()
-})
 
-let BgFile;
-let bgSelectedProfileImage;
 
-let selectedBgProfile = bgProfileFileInput.addEventListener(
-  "change",
-  async function (event) {
-    BgFile = event.target.files[0];
-    bgSelectedProfileImage = `${new Date().getTime()}-${BgFile?.name}`;
-    console.log(BgFile);
-    console.log(bgSelectedProfileImage);
 
-    if (BgFile.type !== "video/mp4") {
-      console.log(BgFile.type);
-      let uploadProfileImage = await uploadFile(BgFile, bgSelectedProfileImage);
-      console.log("your file is uploaded!");
-      let saveImage = (userDetails.bgProfileImage =
-        uploadProfileImage.downloadURL);
-      console.log(await userDetails);
 
-      if (userDetails.bgProfileImage) {
-        let addBgProfileImage = await updateData(userDetails, uid, "users");
-        window.location.reload();
-        return await downloadURL;
-      }
-    } else {
-      console.log("sorry your selected file is video!");
-    }
-  }
-);
+// let bgProfileFileInput = document.querySelector('#bgProfileFileInput')
+// bgProfileImage.addEventListener('dblclick' , () => {
+//   bgProfileFileInput.click()
+// })
+
+// let BgFile;
+// let bgSelectedProfileImage;
+
+// let selectedBgProfile = bgProfileFileInput.addEventListener(
+//   "change",
+//   async function (event) {
+//     BgFile = event.target.files[0];
+//     bgSelectedProfileImage = `${new Date().getTime()}-${BgFile?.name}`;
+//     console.log(BgFile);
+//     console.log(bgSelectedProfileImage);
+
+//     if (BgFile.type !== "video/mp4") {
+//       console.log(BgFile.type);
+//       let uploadProfileImage = await uploadFile(BgFile, bgSelectedProfileImage);
+//       console.log("your file is uploaded!");
+//       let saveImage = (userDetails.bgProfileImage =
+//         uploadProfileImage.downloadURL);
+//       console.log(await userDetails);
+
+//       if (userDetails.bgProfileImage) {
+//         let addBgProfileImage = await updateData(userDetails, uid, "users");
+//         window.location.reload();
+//         return await downloadURL;
+//       }
+//     } else {
+//       console.log("sorry your selected file is video!");
+//     }
+//   }
+// );
+
+
+
+
+// profile image
 
 
 
@@ -313,414 +318,6 @@ let displayingPost = async (loggedInuserDetails) => {
   });
 };
 
-// // posts
-let fileInput = document.querySelector("#fileInput");
-let discriptionInput = document.querySelector(".discriptionInput");
-let postBtn = document.querySelector("#postBtn");
 
-// uploading post
 
-let selectedFile;
-let selectedFileName;
-let url;
-let postObj;
-let fileArea;
 
-let postHandler = async () => {
-  // Check if either description or file is provided
-  if (discriptionInput.value || fileInput.files.length > 0) {
-    postObj = {
-      discription: discriptionInput.value || "",
-      userDetails: userDetails || "",
-    };
-
-    // Check if a file is selected
-    if (fileInput.files.length > 0) {
-      selectedFile = fileInput.files[0];
-      selectedFileName = `${new Date().getTime()}-${selectedFile.name}`;
-      postObj.fileType = selectedFile.type;
-
-      const storageRef = ref(storage, selectedFileName);
-      const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is " + progress + "% done");
-              break;
-          }
-        },
-        (error) => {
-          // Handle unsuccessful uploads
-          console.error("Upload error:", error);
-        },
-        async () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            url = await downloadURL;
-            postObj.file = url;
-            // saving data into firestore
-            const savingData = await addInDB(postObj, "posts");
-            window.location.reload();
-          });
-        }
-      );
-    } else {
-      // If no file is selected, save the post with description only
-      console.log('No file added!');
-      const savingData = await addInDB(postObj, "posts");
-      window.location.reload();
-    }
-  } else {
-    // If neither description nor file is provided, do not proceed
-    alert('No description or file added!');
-  }
-};
-postBtn.addEventListener("click", postHandler);
-
-// edit post
-let editPostText = document.querySelector("#editPostText");
-let selectedPostId;
-let selectedPost;
-window.editPostHandler = async (postId) => {
-  console.log("postId for edit handler ==>>" + postId);
-
-  const q = query(collection(db, "posts"));
-  const querySnapshot = await getDocs(q);
-
-  selectedPost = querySnapshot.forEach(async (post) => {
-    if (post.id == postId) {
-      editPostText.textContent = post.data().discription;
-      console.log(post.data());
-      selectedPostId = await post.id;
-      selectedPost = await post.data();
-    }
-  });
-};
-
-let updateBtn = document.querySelector("#updateBtn");
-
-const updatePostHandler = async () => {
-  selectedPost.discription = editPostText.value;
-  console.log(await selectedPost);
-  updateData(selectedPost, selectedPostId, "posts");
-  setTimeout(() => {
-    window.location.reload();
-  }, 3000);
-};
-updateBtn.addEventListener("click", updatePostHandler);
-
-// delete post
-window.deletePostHandler = async (postId) => {
-  console.log("postId ==>>" + postId);
-  await deleteDoc(doc(db, "posts", await postId));
-  window.location.reload();
-};
-
-// // displaying post
-
-// let centerAreaPosts = document.querySelector('.centerArea')
-
-// let displayingPost = () => {
-//     let posts = JSON.parse(localStorage.getItem("posts")) || []
-//     // console.log(posts);
-
-//     posts.reverse().forEach((post) => {
-//         // post HTML
-//        if (post.file) {
-//         centerAreaPosts.innerHTML += `
-//         <div class="col-12 mt-4" >
-//         <div class="bg-white pt-3" "
-//         style="border-radius: 15px; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-//         -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-//         -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
-
-//         <div class="d-flex justify-content-between align-items-center p-1 ">
-
-//         <div class="d-flex justify-content-center align-items-center">
-//         <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
-//         <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${post.user.fullName}</h6>
-//         </div>
-
-//         <div class="d-flex justify-content-center align-items-center dropdown">
-//         ${JSON.parse(localStorage.getItem("loggedInuser")).fullName === post?.user?.fullName ? `<img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
-//         <ul class="dropdown-menu">
-//         <li><a class="dropdown-item" onclick="editPostHandler(${post?.id})" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
-//         <li><a class="dropdown-item" onclick="deleteHandler(${post?.id})">Delete</a></li>
-//         <li><a class="dropdown-item" href="#">Profile</a></li>
-//         </ul>` :``}
-
-//         </div>
-//         </div>
-
-//         <!-- discription area -->
-//         <div class="d-flex justify-content-start align-items-center mt-1 ps-2 p-1 pb-0">
-//         <p class="mb-2" id="description">${post?.discription}</p>
-//         </div>
-
-//         <!-- image area -->
-//         <div class=" p-0 m-0 w-100 mb-2">
-//         <img class="w-100" src="${post?.file}">
-//         </div>
-
-//         <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
-//         <img src="../assets/home/home center content/like btn.png" width="20rem">
-//         <h6 class="p-0  my-1 ms-1">${post.likes.length}</h6>
-//         </div>
-//         <div class="d-flex justify-content-start align-items-center  mx-2">
-//         <hr class="w-100 mt-1 mb-2">
-//         </div>
-
-//         <!-- like and comment area -->
-//         <div class="d-flex justify-content-around align-items-center p-0 m-0">
-
-//         <button onclick="likeHandler(${post['id']})"  class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like</button>
-
-//         <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px;">
-//         <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
-
-//         </div>
-
-//         </div>
-//         </div>`;
-//        } else {
-//         centerAreaPosts.innerHTML += `
-//         <div class="col-12 mt-4" >
-//         <div class="bg-white pt-3" "
-//         style="border-radius: 15px; box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-//         -webkit-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);
-//         -moz-box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);">
-
-//         <div class="d-flex justify-content-between align-items-center p-1 ">
-
-//         <div class="d-flex justify-content-center align-items-center">
-//         <img class="ms-2 me-2 " width="40rem" src="../assets/home/user account button image.png" style="border-radius:50% ;">
-//         <div>
-//         <h6 class="mb-0" id="userNameInPost" style="text-transform: capitalize;">${post.user.fullName}</h6>
-//         </div>
-//         </div>
-
-//         <div class="d-flex justify-content-center align-items-center dropdown">
-//         ${JSON.parse(localStorage.getItem("loggedInuser")).fullName === post?.user?.fullName ? `<img class="ms-2 me-2 " class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-offset="10,20" width="30rem" src="../assets/home/home center content/post handler Btn.png">
-
-//         <ul class="dropdown-menu">
-//         <li><a class="dropdown-item" onclick="editPostHandler(${post?.id})" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit</a></li>
-//         <li><a class="dropdown-item" onclick="deleteHandler(${post?.id})">Delete</a></li>
-//         <li><a class="dropdown-item" href="#">Profile</a></li>
-//         </ul>` :``}
-
-//         </div>
-//         </div>
-
-//         <!-- discription area -->
-//         <div class="d-flex justify-content-start align-items-center mt-1 ps-2 p-1 pb-0">
-//         <p class="mb-2" id="description">${post?.discription}</p>
-//         </div>
-
-//         <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
-//         <img src="../assets/home/home center content/like btn.png" width="20rem">
-//         <h6 class="p-0  my-1 ms-1">${post.likes.length}</h6>
-//         </div>
-//         <div class="d-flex justify-content-start align-items-center  mx-2">
-//         <hr class="w-100 mt-1 mb-2">
-//         </div>
-
-//         <!-- like and comment area -->
-//         <div class="d-flex justify-content-around align-items-center p-0 m-0">
-
-//         <button onclick="likeHandler(${post['id']})" class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius: 0px 0px 0px 10px;">
-//         <img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like
-//       </button>
-
-//         <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px; border-radius:0px 0px 10px 0px;">
-//         <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
-
-//         </div>
-
-//         </div>
-//         </div>`;
-//        }
-
-//     })
-
-// }
-// displayingPost()
-
-// ////////////////////////////////////////////////
-
-// // post function
-// postBtn.addEventListener('click', () => {
-//     let posts = JSON.parse(localStorage.getItem('posts')) || []
-//     let postObj;
-
-//     if (fileInput.value) {
-//         // console.log(fileInput.value);
-//         postObj = {
-//             id:Date.now(),
-//             discription: discriptionInput.value,
-//             likes: [],
-//             comment: [],
-//             file:fileInput.value,
-//             user: JSON.parse(localStorage.getItem('loggedInuser'))
-//         }
-//         console.log(postObj);
-//     } else {
-//         postObj = {
-//             id:id=Date.now(),
-//             discription: discriptionInput.value,
-//             likes: [],
-//             comment: [],
-//             user: JSON.parse(localStorage.getItem('loggedInuser'))
-//         }
-//         console.log(postObj);
-//     }
-
-//     // giviing data to popsts array
-//     posts.push(postObj)
-//     console.log(posts);
-
-//     // giving posts array to localStorage
-//     localStorage.setItem("posts" , JSON.stringify(posts))
-
-//     // emptying the felids
-//     fileInput.value = ''
-//     discriptionInput.value = ''
-
-//     // reloading the page
-//     location.reload()
-
-// //     // getting data from localStorage
-// //     let posts = JSON.parse(localStorage.getItem("posts")) || []
-// //     console.log(posts);
-
-// //     // let selectedFile = fileInput.files[0];
-// //     // let discriptionValue = discriptionInput.value;
-
-// //     // if (selectedFile || discriptionValue) {
-// //     //     let reader = new FileReader();
-
-// //     //     reader.onload = function (event) {
-// //     //         let fileUrl = event.target.result || false;
-
-// //     //         // data of post
-// //     //         postObj = {
-// //     //             id: Date.now(),
-// //     //             discription: discriptionValue,
-// //     //             file: fileUrl || '',
-// //     //             userDetails: JSON.parse(localStorage.getItem('loggedInuser'))
-// //     //         };
-
-// //     //         // emptying the fields of post modal
-// //     //         discriptionInput.value = '';
-// //     //         fileInput.value = '';
-
-// //     //         // adding data in localStorage
-// //     //         postsData.push(postObj);
-// //     //         localStorage.setItem("postsData", JSON.stringify(postsData));
-
-// //     //         // Displaying posts after adding a new post
-// //     //         // displayPosts();
-// //     //     };
-
-// //     //     if (selectedFile) {
-// //     //         reader.readAsDataURL(selectedFile);
-// //     //     } else {
-// //     //         // If no file is selected, invoke onload with null result
-// //     //         reader.onload({ target: { result: null } });
-// //     //     }
-// //     // }
-// });
-
-// // // delete post
-
-// function deleteHandler(postId) {
-//     // console.log(postId);
-
-//     // getting data form localStorage
-//     let postsFromLocalStorage = JSON.parse(localStorage.getItem('posts'))
-//     // console.log(postsFromLocalStorage);
-
-//     let filtration = postsFromLocalStorage.filter( (post) => post.id !== postId)
-//     // console.log(filtration);
-
-//     // giving data to localStorage
-//     localStorage.setItem('posts' , JSON.stringify(filtration))
-
-//     // reloading the page
-//     location.reload()
-
-// }
-
-// ////////////////////////////////////////
-
-// // edit function
-// let editTextArea = document.querySelector('.editTextArea')
-// let oldPost;
-// let oldPostIndex;
-
-// function editPostHandler(postId) {
-//     // console.log(postId);
-
-//     // geting data from localStorage
-//     let postsData = JSON.parse(localStorage.getItem("posts"))
-//     // console.log(postsData);
-
-//     // FINDING THE POST
-//     let findPost = postsData.find( post => post.id == postId )
-//     let findPostIndex = postsData.findIndex( post => post.id == postId )
-//     // console.log(findPostIndex);
-
-//     // content of post giving to input
-//     editTextArea.innerHTML = findPost['discription']
-
-//     // saving data in old post
-//     oldPost = findPost
-//     oldPostIndex = findPostIndex
-
-// }
-
-// ///////////////////////////////////////////
-
-// let updateBtn = document.querySelector('#updateBtn')
-
-// function updateHandler() {
-
-//     // making an obbject for updated post
-//     let postObj = {
-//         id: oldPost['id'],
-//         discription: editTextArea.value ||  oldPost['discription'],
-//         file: oldPost['file'],
-//         user: oldPost['user'],
-//         likes: oldPost.likes,
-//         comment: oldPost.comment
-//     }
-//     // console.log(postObj);
-
-//     // data from localStorage
-//     let postData = JSON.parse(localStorage.getItem('posts'))
-//     postData.splice(oldPostIndex , 1 , postObj)
-
-//     // giving data to localStorage
-//     let posts = (localStorage.setItem('posts' , JSON.stringify(postData)))
-
-//     // reloading the page
-//     location.reload()
-// }
-
-//////////////////////////////////////////
-
-// let logoutBtn = document.querySelector('#logoutBtn')
-
-// logoutBtn.addEventListener('click' , () => {
-
-//     localStorage.removeItem('loggedInuser')
-
-//     window.location.href = '../index.html'
-// })
