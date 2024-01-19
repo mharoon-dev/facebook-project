@@ -1,7 +1,6 @@
 import {
   addInDB,
   addInDBById,
-  deleteData,
   getAllDataOrderedByTimestamp,
   logout,
   updateData,
@@ -471,6 +470,3 @@ window.deletePostHandler = async (postId) => {
 //       localStorage.setItem("posts", JSON.stringify(posts))
 //       location.reload()
 // }
-
-// ////////////////////////////////////////////////
-

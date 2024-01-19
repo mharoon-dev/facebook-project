@@ -172,25 +172,6 @@ const updateData = async (data, id, collectionName) => {
     }
 }
 
-const deleteData = async (collectionName , postId) => {
-    console.log(collectionName);
-    console.log(postId);
-    
-    try {
-        deleteDoc(doc(db, collectionName, postId));
-        return {
-            status: true,
-            message: "data deleted sucessfully!",
-        }
-    } catch (error) {
-        alert(error) 
-        return {
-            status: false,
-            message: error.message,
-        }
-    }
-}
-
 // created getLoggedInUser function to get logged in user data
 const getLoggedInUser = () => {
     return new Promise((resolve, reject) => {
@@ -228,4 +209,4 @@ const uploadFile = async (file, fileName) => {
 };
 
 
-export { signUp, login, addInDBById, getLoggedInUser, getData, deleteData , updateData, uploadFile, getAllDataOrderedByTimestamp, logout, addInDB }
+export { signUp, login, addInDBById, getLoggedInUser, getData , updateData, uploadFile, getAllDataOrderedByTimestamp, logout, addInDB }
