@@ -2,6 +2,7 @@ import {
   addInDB,
   addInDBById,
   getAllDataOrderedByTimestamp,
+  getData,
   logout,
   updateData,
 } from "../utilities/functions.mjs";
@@ -294,7 +295,8 @@ let displayingPost = async (loggedInuserDetails) => {
           <!-- like and comment area -->
           <div class="d-flex justify-content-around align-items-center p-0 m-0">
          
-          <button onclick=""  class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like</button>
+          <button onclick="likeHandler('${(doc.id, loggedInuserDetails)
+          }')"  class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like</button>
   
           <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px;">
           <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
@@ -396,7 +398,8 @@ window.editPostHandler = async (postId) => {
       selectedPost = getPostsForEdit.data.forEach(async (post) => {
         if (post.id == postId) {
           console.log(post.data());
-          editPostText.textContent = post.data().discription == "" ? "" : post.data().discription;
+          editPostText.textContent =
+            post.data().discription == "" ? "" : post.data().discription;
           selectedPostId = await post.id;
           selectedPost = await post.data();
         }
@@ -438,14 +441,27 @@ updateBtn.addEventListener("click", updatePostHandler);
 window.deletePostHandler = async (postId) => {
   console.log("postId ==>>" + postId);
   deleteDoc(doc(db, "posts", await postId));
-    alert(await "Your post has deleted!");
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+  alert(await "Your post has deleted!");
+  setTimeout(() => {
+    window.location.reload();
+  }, 1000);
 };
 
-// let likeHandler = (postId) => {
-//     // console.log(postId);
+// window.likeHandler = async ({ postId, loggedInuserDetails }) => {
+//   console.log(postId);
+//   console.log(await loggedInuserDetails);
+//   return;
+
+//   try {
+//     const getPost = await getData(await postId, "posts");
+//     console.log(await getPost.data);
+//     let likeKey = (getPost.data.likes = loggedInuserDetails);
+//     console.log(likeKey);
+//   } catch (error) {
+//     alert(error + "\ncatch error on line number 462");
+//   }
+// };
+
 //     let posts = JSON.parse(localStorage.getItem('posts'))
 
 //     let postLiked = posts.find( (post) => {
@@ -469,4 +485,3 @@ window.deletePostHandler = async (postId) => {
 
 //       localStorage.setItem("posts", JSON.stringify(posts))
 //       location.reload()
-// }
