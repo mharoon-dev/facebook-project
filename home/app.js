@@ -286,7 +286,9 @@ let displayingPost = async (loggedInuserDetails) => {
   
           <div class="d-flex justify-content-start align-items-center w-100 ms-2 my-0">
           <img src="../assets/home/home center content/like btn.png" width="20rem">
-          <h6 class="p-0 my-1 ms-1"></h6>
+          <h6 class="p-0 my-1 ms-1 " id="likeNumbers-${doc.id}">${
+            doc.data()?.likeKey.length
+          }</h6>
           </div>
           <div class="d-flex justify-content-start align-items-center  mx-2">
           <hr class="w-100 mt-1 mb-2">
@@ -295,7 +297,7 @@ let displayingPost = async (loggedInuserDetails) => {
           <!-- like and comment area -->
           <div class="d-flex justify-content-around align-items-center p-0 m-0">
          
-          <button onclick="likeHandler('${doc.id}, ${ loggedInuserDetails}')"  class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img src="../assets/home/home center content/like icon(without like ).png" class="me-1" width="20rem"> Like</button>
+          <button onclick="likeHandler('${doc.id}', '${loggedInuserDetails.email}', document.querySelector('#likeNumbers-${doc.id}') , document.querySelector('#likeIcon-${doc.id}') ) " class="w-50 p-2 d-flex  justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 0px 10px;"><img id="likeIcon-${doc.id}" src="${doc.data().likeKey.includes(loggedInuserDetails.email) ? "../assets/home/home center content/like icon(with like ).png" : "../assets/home/home center content/like icon(without like ).png" }" class="me-1" width="20rem"> Like</button>
   
           <button class="w-50 p-2 d-flex justify-content-center align-items-center" style="border: 1px solid lightgrey; background-color: #fcfcfc; border-radius:0px 0px 10px 0px;">
           <img src="../assets/home/home center content/comment btn.png" class="me-1" width="17rem"> Comment</button>
@@ -328,6 +330,8 @@ let postHandler = async () => {
     postObj = {
       discription: discriptionInput.value || "",
       userDetails: userDetails || "",
+      likeKey: [],
+      commentKey: [],
     };
 
     // Check if a file is selected
@@ -443,46 +447,58 @@ window.deletePostHandler = async (postId) => {
   alert(await "Your post has deleted!");
   setTimeout(() => {
     window.location.reload();
-  }, 1000);
+  }, 5000);
 };
 
-window.likeHandler = async ( postId, loggedInuser) => {
-  console.log(postId);
-  // console.log(await spreading);
+// like handler
+window.likeHandler = async (postId, loggedInuserEmail, likeElement , likeIcon) => {
+  if (postId && loggedInuserEmail && likeElement) {
+    console.log(await postId);
+    console.log(await loggedInuserEmail);
+    console.log(await likeElement);
+    console.log(await likeIcon);
 
-  try {
-    const getPost = await getData(await postId, "posts");
-    alert("try chala hai")
-// is ke baad error haai
-    return
-    console.log(await getPost.data);
-    let likeKey = (getPost.data.likes = loggedInuser);
-    console.log(likeKey);
-  } catch (error) {
-    alert(error + "\ncatch error on line number 462");
+    try {
+      let getPost = await getData(await postId, "posts");
+      let postDetails = await getPost.data;
+      console.log(await postDetails);
+
+      const ifAlreadyLiked = postDetails.likeKey.find((likeByUserEmail) => {
+        if (likeByUserEmail == loggedInuserEmail) return likeByUserEmail;
+      });
+
+      if (ifAlreadyLiked) {
+        const indexOfUser = postDetails.likeKey.indexOf(ifAlreadyLiked);
+        postDetails.likeKey.splice(indexOfUser, 1);
+        console.log(postDetails);
+
+        // updating data in db
+        const updateData = await addInDBById(postDetails, postId, "posts");
+
+        // updating like numbers
+        likeElement.textContent = postDetails.likeKey.length;
+
+        // updating like icon
+        likeIcon.src = "../assets/home/home center content/like icon(without like ).png";
+      } else {
+        postDetails.likeKey.push(loggedInuserEmail);
+        console.log(postDetails);
+
+        // updating data in db
+        const updateData = await addInDBById(postDetails, postId, "posts");
+
+        // updating like numbers
+        likeElement.textContent = postDetails.likeKey.length;
+
+        // updating like icon
+        likeIcon.src = "../assets/home/home center content/like icon(with like ).png";
+
+      }
+
+    } catch (error) {
+      alert(error.message);
+    }
+  } else {
+    alert("postId or loggedInuserEmail is not provided");
   }
 };
-
-    // let posts = JSON.parse(localStorage.getItem('posts'))
-
-    // let postLiked = posts.find( (post) => {
-    //     if (post['id'] == postId) return post
-    // })
-    // // console.log(postLiked);
-
-    // const loggedInUser = JSON.parse(localStorage.getItem('loggedInuser'))
-    // // console.log(loggedInUser);
-
-    //  const alreadyLiked = postLiked['likes'].find( (likeByUserEmail) => {
-    //      if (likeByUserEmail == loggedInUser['email']) return likeByUserEmail
-    // })
-
-    // if (alreadyLiked) {
-    //     const indexOfUser = postLiked.likes.indexOf(alreadyLiked);
-    //     postLiked.likes.splice(indexOfUser, 1);
-    //   } else {
-    //     postLiked.likes.push(loggedInUser['email']);
-    //   }
-
-      // localStorage.setItem("posts", JSON.stringify(posts))
-      // location.reload()
